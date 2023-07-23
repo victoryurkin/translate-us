@@ -1,32 +1,46 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { Drawer } from 'react-native-drawer-layout';
 import { Layout } from '@translate-us/components';
 import { colors, spacing } from '@translate-us/styles';
 import { ButtonTranslate, ButtonSettings } from './components';
+import { Settings } from './settings';
 
 export const Translate: React.FC = () => {
+  const [isSettingsOpen, toggleSettings] = React.useState(false);
   return (
-    <Layout>
-      <View style={styles.container}>
-        <View style={styles.topBar}>
-          <ButtonSettings />
-        </View>
-        <View style={styles.contentTopContainer}>
-          <ScrollView contentContainerStyle={styles.content}>
-            <Text />
-          </ScrollView>
-        </View>
-        <View style={styles.buttonContainer}>
-          <ButtonTranslate />
-        </View>
-        <View style={styles.contentBottomContainer}>
-          <ScrollView contentContainerStyle={styles.content}>
-            <Text />
-          </ScrollView>
-        </View>
-        <View style={styles.bottomBar} />
-      </View>
-    </Layout>
+    <>
+      <Drawer
+        drawerPosition="right"
+        open={isSettingsOpen}
+        onOpen={() => toggleSettings(true)}
+        onClose={() => toggleSettings(false)}
+        renderDrawerContent={() => {
+          return <Settings />;
+        }}>
+        <Layout>
+          <View style={styles.container}>
+            <View style={styles.topBar}>
+              <ButtonSettings onPress={() => toggleSettings(!isSettingsOpen)} />
+            </View>
+            <View style={styles.contentTopContainer}>
+              <ScrollView contentContainerStyle={styles.content}>
+                <Text />
+              </ScrollView>
+            </View>
+            <View style={styles.buttonContainer}>
+              <ButtonTranslate />
+            </View>
+            <View style={styles.contentBottomContainer}>
+              <ScrollView contentContainerStyle={styles.content}>
+                <Text />
+              </ScrollView>
+            </View>
+            <View style={styles.bottomBar} />
+          </View>
+        </Layout>
+      </Drawer>
+    </>
   );
 };
 
