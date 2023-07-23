@@ -36,8 +36,14 @@ export const supportedLanguages: SupportedLanguages = {
   'bg-BG': { code: 'bg-BG', name: 'Bulgarian (Bulgaria)' },
   'my-MM': { code: 'my-MM', name: 'Burmese (Myanmar)' },
   'ca-ES': { code: 'ca-ES', name: 'Catalan (Spain)' },
-  'yue-Hant-HK': { code: 'yue-Hant-HK', name: 'Chinese, Cantonese (Traditional Hong Kong)' },
-  'zh (cmn-Hans-CN)': { code: 'zh (cmn-Hans-CN)', name: 'Chinese, Mandarin (Simplified, China)' },
+  'yue-Hant-HK': {
+    code: 'yue-Hant-HK',
+    name: 'Chinese, Cantonese (Traditional Hong Kong)',
+  },
+  'zh (cmn-Hans-CN)': {
+    code: 'zh (cmn-Hans-CN)',
+    name: 'Chinese, Mandarin (Simplified, China)',
+  },
   'zh-TW (cmn-Hant-TW)': {
     code: 'zh-TW (cmn-Hant-TW)',
     name: 'Chinese, Mandarin (Traditional, Taiwan)',

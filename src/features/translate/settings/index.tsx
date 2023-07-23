@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
-import { supportedLanguages } from '@translate-us/constants';
+import { CheckIcon } from 'react-native-heroicons/outline';
+import { supportedLanguages, Language } from '@translate-us/constants';
 import { Button } from '@translate-us/components';
-import { useAuth } from '@translate-us/context';
+import { useAuth, useUser } from '@translate-us/context';
 import { SettingsIcon } from './icon';
 import {
   border,
@@ -17,11 +18,11 @@ import { useTranslation } from '@translate-us/i18n';
 export const Settings: React.FC = () => {
   const { t } = useTranslation();
   const { signOut } = useAuth();
+  const { user, updateUser } = useUser();
 
-  const data = Object.keys(supportedLanguages).map(key => ({
-    key,
-    value: supportedLanguages[key].name,
-  }));
+  const data = Object.keys(supportedLanguages).map(
+    key => supportedLanguages[key],
+  );
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
@@ -33,10 +34,31 @@ export const Settings: React.FC = () => {
         <Text style={styles.label}>{t('settings.default_source')}</Text>
         <SelectDropdown
           buttonStyle={styles.select}
+          dropdownStyle={styles.dropdown}
           data={data}
-          renderCustomizedRowChild={item => <Text>{item.value}</Text>}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
+          defaultValue={
+            user && user.defaultSourceLanguage
+              ? user.defaultSourceLanguage
+              : undefined
+          }
+          renderCustomizedRowChild={item => {
+            if (user?.defaultSourceLanguage?.code === item.code) {
+              return (
+                <View style={styles.selectedRow}>
+                  <Text style={styles.selectedRowText}>{item.name}</Text>
+                  <CheckIcon />
+                </View>
+              );
+            }
+            return <Text style={styles.row}>{item.name}</Text>;
+          }}
+          renderCustomizedButtonChild={selectedItem => (
+            <Text>{selectedItem?.name}</Text>
+          )}
+          onSelect={(selectedItem: Language) => {
+            updateUser(draft => {
+              draft.defaultSourceLanguage = selectedItem;
+            });
           }}
           search
           buttonTextAfterSelection={selectedItem => {
@@ -52,10 +74,31 @@ export const Settings: React.FC = () => {
         <Text style={styles.label}>{t('settings.default_source')}</Text>
         <SelectDropdown
           buttonStyle={styles.select}
+          dropdownStyle={styles.dropdown}
           data={data}
-          renderCustomizedRowChild={item => <Text>{item.value}</Text>}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
+          defaultValue={
+            user && user.defaultTargetLanguage
+              ? user.defaultTargetLanguage
+              : undefined
+          }
+          renderCustomizedRowChild={item => {
+            if (user?.defaultTargetLanguage?.code === item.code) {
+              return (
+                <View style={styles.selectedRow}>
+                  <Text style={styles.selectedRowText}>{item.name}</Text>
+                  <CheckIcon />
+                </View>
+              );
+            }
+            return <Text style={styles.row}>{item.name}</Text>;
+          }}
+          renderCustomizedButtonChild={selectedItem => (
+            <Text>{selectedItem?.name}</Text>
+          )}
+          onSelect={(selectedItem: Language) => {
+            updateUser(draft => {
+              draft.defaultTargetLanguage = selectedItem;
+            });
           }}
           search
           buttonTextAfterSelection={selectedItem => {
@@ -96,12 +139,28 @@ const styles = StyleSheet.create({
   label: {
     fontSize: fontSize.md,
     marginBottom: spacing.md,
+    marginTop: spacing.md,
   },
   select: {
     width: '100%',
     borderRadius: border.radius,
-    // borderWidth: 1,
-    // backgroundColor: 'white',
+    paddingHorizontal: spacing.xl,
+  },
+  dropdown: {
+    borderRadius: 20,
+  },
+  row: {
+    paddingHorizontal: spacing.lg,
+  },
+  selectedRow: {
+    paddingHorizontal: spacing.lg,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  selectedRowText: {
+    flex: 1,
+    color: colors.primary['700'],
   },
   signout: {
     flex: 1,
