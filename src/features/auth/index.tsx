@@ -3,6 +3,7 @@ import { StyleSheet, View, Image } from 'react-native';
 import { Layout } from '@translate-us/components';
 import { colors, spacing } from '@translate-us/styles';
 import { BottomBar } from './components';
+import { Signin } from './signin';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +36,12 @@ export const Auth: React.FC = () => {
         <View style={styles.topBar}>
           <Image source={require('./assets/main.png')} style={styles.image} />
         </View>
-        <View style={styles.mainBar} />
+        <View style={styles.mainBar}>
+          <Signin
+            onForgotPassword={() => console.log('!!! Forgot password')}
+            onSuccess={() => console.log('!!! Success')}
+          />
+        </View>
         <BottomBar
           title="Create an account"
           onPress={() => console.log('!!!')}

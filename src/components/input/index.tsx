@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { TextInput, TextInputProps, StyleSheet } from 'react-native';
 import { colors, spacing, border, fontSize } from '@translate-us/styles';
 
@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Input: React.FC<TextInputProps> = props => {
-  return <TextInput style={styles.input} {...props} />;
-};
+export const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
+  return <TextInput style={styles.input} ref={ref} {...props} />;
+});

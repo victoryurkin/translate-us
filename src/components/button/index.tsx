@@ -6,12 +6,14 @@ interface ButtonProps {
   title: string;
   type?: 'primary' | 'default' | 'link';
   block?: boolean;
+  onPress?: () => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   title,
   type = 'primary',
   block = false,
+  onPress,
 }) => {
   const [isActive, setActive] = React.useState<boolean>(false);
 
@@ -47,7 +49,8 @@ export const Button: React.FC<ButtonProps> = ({
       <Pressable
         style={styles.button}
         onPressIn={() => setActive(true)}
-        onPressOut={() => setActive(false)}>
+        onPressOut={() => setActive(false)}
+        onPress={onPress}>
         <Text style={styles.text}>{title}</Text>
       </Pressable>
     </View>
