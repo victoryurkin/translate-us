@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "301124716045",
+    "project_id": "translate-voice-392913",
+    "storage_bucket": "translate-voice-392913.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301124716045:android:35d1edf26cb86ad269f744",
+        "android_client_info": {
+          "package_name": "com.whiteof.translateus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301124716045-mapc7ltqhkpsfl6eoc9ue4qjvaa77bcm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.whiteof.translateus",
+            "certificate_hash": "8e400c912d5455a66bb1b15efa56ef2231a57f81"
+          }
+        },
+        {
+          "client_id": "301124716045-oce21kr7la841m6nrs04475ee4bt41nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_KZWOhbUhD3AFTdGLEfclxNTY5l2avNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301124716045-oce21kr7la841m6nrs04475ee4bt41nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
