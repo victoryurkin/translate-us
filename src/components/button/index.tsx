@@ -6,6 +6,7 @@ interface ButtonProps {
   title: string;
   type?: 'primary' | 'default' | 'link';
   block?: boolean;
+  disabled?: boolean;
   onPress?: () => void;
 }
 
@@ -13,6 +14,7 @@ export const Button: React.FC<ButtonProps> = ({
   title,
   type = 'primary',
   block = false,
+  disabled = false,
   onPress,
 }) => {
   const [isActive, setActive] = React.useState<boolean>(false);
@@ -21,6 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
     container: {
       display: !block ? 'flex' : undefined,
       flexDirection: !block ? 'row' : undefined,
+      width: block ? '100%' : undefined,
     },
     button: {
       backgroundColor: (() => {
@@ -36,11 +39,13 @@ export const Button: React.FC<ButtonProps> = ({
       borderRadius: border.radius,
       paddingHorizontal: spacing['4xl'],
       paddingVertical: spacing.lg,
+      opacity: disabled ? 0.7 : 1,
     },
     text: {
       color: type === 'primary' ? 'white' : colors.secondary[800],
       textDecorationLine: type === 'link' ? 'underline' : undefined,
       fontSize: fontSize.md,
+      textAlign: 'center',
     },
   });
 
@@ -48,9 +53,9 @@ export const Button: React.FC<ButtonProps> = ({
     <View style={styles.container}>
       <Pressable
         style={styles.button}
-        onPressIn={() => setActive(true)}
-        onPressOut={() => setActive(false)}
-        onPress={onPress}>
+        onPressIn={() => !disabled && setActive(true)}
+        onPressOut={() => !disabled && setActive(false)}
+        onPress={!disabled ? onPress : undefined}>
         <Text style={styles.text}>{title}</Text>
       </Pressable>
     </View>

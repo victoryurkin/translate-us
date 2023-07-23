@@ -14,5 +14,12 @@ const styles = StyleSheet.create({
 });
 
 export const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
-  return <TextInput style={styles.input} ref={ref} {...props} />;
+  return (
+    <TextInput
+      onChangeText={props.onChange as ((text: string) => void) | undefined}
+      style={styles.input}
+      ref={ref}
+      {...props}
+    />
+  );
 });

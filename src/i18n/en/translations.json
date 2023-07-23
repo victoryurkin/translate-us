@@ -22,7 +22,11 @@
     "errors": {
       "email_password_not_found": "Email address or password not found",
       "email_not_found": "Email address not found",
-      "email_already_used": "Email address already exists"
+      "email_already_used": "Email address already exists",
+      "email_max_length": "Email should have at most 50 characters",
+      "email_invalid": "Email address is invalid",
+      "email_required": "Enter your email address",
+      "password_required": "Enter your password"
     },
     "reset_success_title": "Email Sent",
     "reset_success_subtitle": "follow the instructions in the email",
