@@ -1,17 +1,13 @@
 import React from 'react';
-// import { MoonLoader } from 'react-spinners';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth, Translate } from '@translate-us/features';
 import { useAuth } from '@translate-us/context';
-import { Text, Button } from 'react-native';
-
-import { Drawer } from 'react-native-drawer-layout';
+import { Text } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 export const Router = () => {
-  const [open, setOpen] = React.useState(false);
   const { isLoading, authUser } = useAuth();
 
   return (

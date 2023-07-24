@@ -151,7 +151,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
-      console.log('!!!!!!!', user);
       try {
         if (user) {
           dispatch({
