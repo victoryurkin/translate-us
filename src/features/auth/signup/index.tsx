@@ -16,36 +16,48 @@ import {
 interface FormData {
   email: string;
   password: string;
+  confirm_password: string;
 }
 
-interface Props {
-  onForgotPassword: () => void;
-}
-
-export const Signin: FC<Props> = ({ onForgotPassword }) => {
+export const Signup: FC = () => {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
   const { t } = useTranslation();
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setError: setFormError,
   } = useForm();
+
+  const validate = (data: FormData): boolean => {
+    if (data.password !== data.confirm_password) {
+      setFormError('confirm_password', {
+        type: 'manual',
+        message: t('auth.passwords_dont_match'),
+      });
+      return false;
+    }
+    setError(undefined);
+    return true;
+  };
 
   const onSubmit = handleSubmit(async (data: unknown) => {
     try {
       const formData = data as FormData;
-      setLoading(true);
-      await signIn(formData.email, formData.password);
+      const isValid = validate(formData);
+      if (isValid) {
+        setLoading(true);
+        await signUp(formData.email, formData.password);
+      }
     } catch (err) {
       const authError = err as AuthError;
       switch (authError.code) {
-        case AuthErrorCodes.USER_NOT_FOUND:
-        case AuthErrorCodes.WRONG_PASSWORD:
-          setError(t('auth.errors.email_password_not_found'));
+        case AuthErrorCodes.EMAIL_ALREADY_USED:
+          setError(t('auth.errors.email_already_used'));
           break;
         default:
           setError(t('generic_error'));
@@ -92,7 +104,16 @@ export const Signin: FC<Props> = ({ onForgotPassword }) => {
         <Controller
           name="password"
           control={control}
-          rules={{ required: t('auth.errors.password_required') }}
+          rules={{
+            required: t('auth.errors.password_required'),
+            validate: {
+              maxLength: v =>
+                v.length <= 50 || t('auth.errors.password_max_length'),
+              matchPattern: v =>
+                /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])\S{6,}/.test(v) ||
+                t('auth.errors.password_invalid'),
+            },
+          }}
           render={({ field }) => (
             <Input
               {...field}
@@ -110,23 +131,36 @@ export const Signin: FC<Props> = ({ onForgotPassword }) => {
         )}
       </View>
 
-      {error && <Text>{error}</Text>}
+      <View style={formFieldStyles}>
+        <Controller
+          name="confirm_password"
+          control={control}
+          rules={{ required: t('auth.errors.confirm_password_required') }}
+          render={({ field }) => (
+            <Input
+              {...field}
+              id="confirm_password"
+              secureTextEntry={true}
+              placeholder={t('auth.confirm_password')}
+              editable={!isLoading}
+            />
+          )}
+        />
+        {errors.confirm_password && (
+          <Text style={styles.formError}>
+            {errors.confirm_password.message as string}
+          </Text>
+        )}
+      </View>
+
+      {error && <Text style={styles.formErrorResponse}>{error}</Text>}
 
       <View style={formFieldStyles}>
         <Button
-          title={t('auth.signin')}
+          title={t('auth.signup')}
           block={true}
           disabled={isLoading}
           onPress={onSubmit}
-        />
-      </View>
-
-      <View style={formFieldStyles}>
-        <Button
-          title={t('auth.forgot_password')}
-          type="link"
-          onPress={onForgotPassword}
-          block={true}
         />
       </View>
     </View>
@@ -153,5 +187,10 @@ const styles = StyleSheet.create({
   formError: {
     ...textError,
     paddingHorizontal: spacing.xl,
+  },
+  formErrorResponse: {
+    ...textError,
+    paddingHorizontal: spacing.xl,
+    marginVertical: spacing.lg,
   },
 });

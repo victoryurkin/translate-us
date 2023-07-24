@@ -26,7 +26,10 @@
       "email_max_length": "Email should have at most 50 characters",
       "email_invalid": "Email address is invalid",
       "email_required": "Enter your email address",
-      "password_required": "Enter your password"
+      "password_required": "Enter your password",
+      "password_max_length": "Password should have at most 50 characters",
+      "password_invalid": "Min 6 chars, one uppercase, one number",
+      "confirm_password_required": "Confirm your password"
     },
     "reset_success_title": "Email Sent",
     "reset_success_subtitle": "follow the instructions in the email",
