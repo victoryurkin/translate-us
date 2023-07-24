@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { colors, spacing, fontSize } from '@translate-us/styles';
 
 interface BottomBarProps {
@@ -24,16 +25,20 @@ export const BottomBar: React.FC<BottomBarProps> = ({ title, onPress }) => {
     text: {
       color: 'white',
       fontSize: fontSize.md,
+      textDecorationLine: 'underline',
     },
   });
 
   return (
     <Pressable
-      style={styles.bottomBar}
       onPressIn={() => setActive(true)}
       onPressOut={() => setActive(false)}
       onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+      <LinearGradient
+        style={styles.bottomBar}
+        colors={[colors.primary[700], colors.primary[600]]}>
+        <Text style={styles.text}>{title}</Text>
+      </LinearGradient>
     </Pressable>
   );
 };

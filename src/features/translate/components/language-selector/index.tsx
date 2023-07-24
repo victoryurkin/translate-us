@@ -122,6 +122,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             {filteredLanguages.map(lang => {
               return (
                 <Pressable
+                  key={lang.code}
                   style={styles.row}
                   onPress={() => handleLanguageChange(lang)}>
                   <Text

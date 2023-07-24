@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Image, ScrollView } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Layout } from '@translate-us/components';
 import { colors, spacing } from '@translate-us/styles';
 import { useTranslation } from '@translate-us/i18n';
@@ -24,9 +25,15 @@ export const Auth: React.FC = () => {
   return (
     <Layout>
       <View style={styles.container}>
-        <View style={styles.topBar}>
+        <LinearGradient
+          colors={[
+            colors.primary[600],
+            colors.primary[500],
+            colors.primary[700],
+          ]}
+          style={styles.topBar}>
           <Image source={require('./assets/main.png')} style={styles.image} />
-        </View>
+        </LinearGradient>
         <ScrollView style={styles.mainBar}>
           {virtualRoute === VirtualRoutes.SIGN_IN && (
             <Signin

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { Drawer } from 'react-native-drawer-layout';
 import { Layout } from '@translate-us/components';
 import { useUser } from '@translate-us/context';
@@ -52,9 +53,11 @@ export const Translate: React.FC = () => {
       <BottomSheetModalProvider>
         <Layout>
           <View style={styles.container}>
-            <View style={styles.topBar}>
+            <LinearGradient
+              colors={[colors.primary[600], colors.primary[700]]}
+              style={styles.topBar}>
               <ButtonSettings onPress={() => toggleSettings(!isSettingsOpen)} />
-            </View>
+            </LinearGradient>
             <View style={styles.absoluteContainer}>
               <LanguageSelector
                 language={sourceLanguage}
@@ -82,7 +85,10 @@ export const Translate: React.FC = () => {
                 type="translate-target"
               />
             </View>
-            <View style={styles.bottomBar} />
+            <LinearGradient
+              colors={[colors.primary[700], colors.primary[600]]}
+              style={styles.bottomBar}
+            />
           </View>
         </Layout>
       </BottomSheetModalProvider>
@@ -100,13 +106,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary[600],
     display: 'flex',
     alignItems: 'flex-end',
-    paddingTop: spacing.xl,
     paddingBottom: spacing.sm,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     position: 'relative',
     zIndex: 10,
-    height: 90,
+    height: 60,
   },
   contentTopContainer: {
     flex: 1,
@@ -176,10 +181,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: spacing['4xl'],
+    paddingVertical: spacing['3xl'],
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    height: 90,
+    height: 60,
   },
   bottomSheetModal: {
     backgroundColor: colors.secondary[800],
