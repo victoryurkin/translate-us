@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import SelectDropdown from 'react-native-select-dropdown';
-import { CheckIcon } from 'react-native-heroicons/outline';
-import { supportedLanguages, Language } from '@translate-us/constants';
+import { Language } from '@translate-us/constants';
 import { Button } from '@translate-us/components';
 import { useAuth, useUser } from '@translate-us/context';
 import { SettingsIcon } from './icon';
@@ -14,15 +12,13 @@ import {
   spacing,
 } from '@translate-us/styles';
 import { useTranslation } from '@translate-us/i18n';
+import { LanguageSelector } from '../components';
 
 export const Settings: React.FC = () => {
   const { t } = useTranslation();
   const { signOut } = useAuth();
   const { user, updateUser } = useUser();
 
-  const data = Object.keys(supportedLanguages).map(
-    key => supportedLanguages[key],
-  );
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
@@ -32,81 +28,27 @@ export const Settings: React.FC = () => {
 
       <View style={formFieldStyles}>
         <Text style={styles.label}>{t('settings.default_source')}</Text>
-        <SelectDropdown
-          buttonStyle={styles.select}
-          dropdownStyle={styles.dropdown}
-          data={data}
-          defaultValue={
-            user && user.defaultSourceLanguage
-              ? user.defaultSourceLanguage
-              : undefined
-          }
-          renderCustomizedRowChild={item => {
-            if (user?.defaultSourceLanguage?.code === item.code) {
-              return (
-                <View style={styles.selectedRow}>
-                  <Text style={styles.selectedRowText}>{item.name}</Text>
-                  <CheckIcon />
-                </View>
-              );
-            }
-            return <Text style={styles.row}>{item.name}</Text>;
-          }}
-          renderCustomizedButtonChild={selectedItem => (
-            <Text>{selectedItem?.name}</Text>
-          )}
-          onSelect={(selectedItem: Language) => {
+        <LanguageSelector
+          language={user?.defaultSourceLanguage}
+          onChange={(lang: Language) => {
             updateUser(draft => {
-              draft.defaultSourceLanguage = selectedItem;
+              draft.defaultSourceLanguage = lang;
             });
           }}
-          search
-          buttonTextAfterSelection={selectedItem => {
-            return selectedItem;
-          }}
-          rowTextForSelection={item => {
-            return item;
-          }}
+          type="settings-source"
         />
       </View>
 
       <View style={formFieldStyles}>
-        <Text style={styles.label}>{t('settings.default_source')}</Text>
-        <SelectDropdown
-          buttonStyle={styles.select}
-          dropdownStyle={styles.dropdown}
-          data={data}
-          defaultValue={
-            user && user.defaultTargetLanguage
-              ? user.defaultTargetLanguage
-              : undefined
-          }
-          renderCustomizedRowChild={item => {
-            if (user?.defaultTargetLanguage?.code === item.code) {
-              return (
-                <View style={styles.selectedRow}>
-                  <Text style={styles.selectedRowText}>{item.name}</Text>
-                  <CheckIcon />
-                </View>
-              );
-            }
-            return <Text style={styles.row}>{item.name}</Text>;
-          }}
-          renderCustomizedButtonChild={selectedItem => (
-            <Text>{selectedItem?.name}</Text>
-          )}
-          onSelect={(selectedItem: Language) => {
+        <Text style={styles.label}>{t('settings.default_target')}</Text>
+        <LanguageSelector
+          language={user?.defaultTargetLanguage}
+          onChange={(lang: Language) => {
             updateUser(draft => {
-              draft.defaultTargetLanguage = selectedItem;
+              draft.defaultTargetLanguage = lang;
             });
           }}
-          search
-          buttonTextAfterSelection={selectedItem => {
-            return selectedItem;
-          }}
-          rowTextForSelection={item => {
-            return item;
-          }}
+          type="settings-source"
         />
       </View>
 

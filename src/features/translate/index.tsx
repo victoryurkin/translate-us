@@ -1,13 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { Layout } from '@translate-us/components';
 import { useUser } from '@translate-us/context';
 import { border, colors, fontSize, spacing } from '@translate-us/styles';
-import { ButtonTranslate, ButtonSettings } from './components';
+import {
+  ButtonTranslate,
+  ButtonSettings,
+  LanguageSelector,
+} from './components';
 import { Settings } from './settings';
 import { Language, supportedLanguages } from '@translate-us/constants';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 export const Translate: React.FC = () => {
   const { isLoading, user } = useUser();
@@ -32,34 +37,30 @@ export const Translate: React.FC = () => {
   }, [isLoading]);
 
   return (
-    <>
-      <Drawer
-        drawerPosition="right"
-        open={isSettingsOpen}
-        onOpen={() => toggleSettings(true)}
-        onClose={() => toggleSettings(false)}
-        renderDrawerContent={() => {
-          return <Settings />;
-        }}>
+    <Drawer
+      drawerPosition="right"
+      open={isSettingsOpen}
+      onOpen={() => toggleSettings(true)}
+      onClose={() => toggleSettings(false)}
+      renderDrawerContent={() => {
+        return (
+          <BottomSheetModalProvider>
+            <Settings />
+          </BottomSheetModalProvider>
+        );
+      }}>
+      <BottomSheetModalProvider>
         <Layout>
           <View style={styles.container}>
             <View style={styles.topBar}>
               <ButtonSettings onPress={() => toggleSettings(!isSettingsOpen)} />
             </View>
             <View style={styles.absoluteContainer}>
-              <View style={styles.languageContainer}>
-                <View style={styles.shadowContainer}>
-                  <View style={styles.flagContainer}>
-                    {sourceLanguage?.image && (
-                      <Image
-                        source={sourceLanguage.image}
-                        style={styles.flag}
-                      />
-                    )}
-                  </View>
-                </View>
-                <Text style={styles.languageName}>{sourceLanguage?.name}</Text>
-              </View>
+              <LanguageSelector
+                language={sourceLanguage}
+                onChange={(lang: Language) => setSourceLanguage(lang)}
+                type="translate-source"
+              />
             </View>
             <View style={styles.contentTopContainer}>
               <ScrollView contentContainerStyle={styles.content}>
@@ -75,25 +76,17 @@ export const Translate: React.FC = () => {
               </ScrollView>
             </View>
             <View style={styles.absoluteContainer}>
-              <View style={styles.languageContainer}>
-                <Text style={styles.languageName}>{targetLanguage?.name}</Text>
-                <View style={styles.shadowContainer}>
-                  <View style={styles.flagContainer}>
-                    {targetLanguage?.image && (
-                      <Image
-                        source={targetLanguage.image}
-                        style={styles.flag}
-                      />
-                    )}
-                  </View>
-                </View>
-              </View>
+              <LanguageSelector
+                language={targetLanguage}
+                onChange={(lang: Language) => setTargetLanguage(lang)}
+                type="translate-target"
+              />
             </View>
             <View style={styles.bottomBar} />
           </View>
         </Layout>
-      </Drawer>
-    </>
+      </BottomSheetModalProvider>
+    </Drawer>
   );
 };
 
@@ -187,5 +180,15 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     height: 90,
+  },
+  bottomSheetModal: {
+    backgroundColor: colors.secondary[800],
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    shadowOffset: {
+      width: 0,
+      height: -5,
+    },
   },
 });

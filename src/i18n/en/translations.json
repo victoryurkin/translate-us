@@ -35,7 +35,8 @@
   "generic_error": "Something went wrong. Please, try again later.",
   "translate": {
     "swipe": "swipe",
-    "hold": "hold"
+    "hold": "hold",
+    "search": "Search..."
   },
   "settings": {
     "default_languages": "Default Languages",
