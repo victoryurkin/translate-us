@@ -54,13 +54,14 @@ export const useStream = () => {
   const isRecording = useRef(false);
 
   const connect = useCallback(() => {
-    // socketRef.current = io(
-    //   'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app',
-    socketRef.current = io('http://localhost:8000', {
-      auth: {
-        token: accessToken,
+    socketRef.current = io(
+      'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app',
+      {
+        auth: {
+          token: accessToken,
+        },
       },
-    });
+    );
 
     socketRef.current.on('disconnect', () => {
       socketRef.current?.removeAllListeners();

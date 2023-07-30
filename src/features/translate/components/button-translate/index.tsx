@@ -1,33 +1,95 @@
 import React from 'react';
 import { MicrophoneIcon } from 'react-native-heroicons/solid';
-import { View, StyleSheet, Pressable } from 'react-native';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  Pressable,
+  GestureResponderEvent,
+} from 'react-native';
 import { colors } from '@translate-us/styles';
 
 interface ButtonTranslateProps {
-  onPressIn?: () => void;
-  onPressOut?: () => void;
+  onStartUpRecording?: () => void;
+  onStartDownRecording?: () => void;
+  onStopRecording?: () => void;
+}
+
+enum AnimationDirection {
+  UP = 'up',
+  DOWN = 'down',
 }
 
 export const ButtonTranslate: React.FC<ButtonTranslateProps> = ({
-  onPressIn,
-  onPressOut,
+  onStartUpRecording,
+  onStartDownRecording,
+  onStopRecording,
 }) => {
   const [isActive, setActive] = React.useState(false);
+  const [isAnimating, setAnimating] = React.useState<AnimationDirection>();
+  const moveAnimation = React.useRef(new Animated.Value(0)).current;
+  const initPositionRef = React.useRef<number>();
 
-  const handlePressIn = () => {
+  const animationUp = React.useMemo(
+    () =>
+      Animated.timing(moveAnimation, {
+        toValue: -40,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    [moveAnimation],
+  );
+
+  const animationDown = React.useMemo(
+    () =>
+      Animated.timing(moveAnimation, {
+        toValue: 40,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    [moveAnimation],
+  );
+
+  const handleTouchMove = (e: GestureResponderEvent) => {
+    if (initPositionRef.current) {
+      if (initPositionRef.current - e.nativeEvent.pageY > 0) {
+        setAnimating(AnimationDirection.UP);
+      } else {
+        setAnimating(AnimationDirection.DOWN);
+      }
+    }
+  };
+
+  const handlePressIn = (e: GestureResponderEvent) => {
+    initPositionRef.current = e.nativeEvent.pageY;
     setActive(true);
-    onPressIn && onPressIn();
   };
 
   const handlePressOut = () => {
     setActive(false);
-    onPressOut && onPressOut();
+    setAnimating(undefined);
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      position: 'absolute',
-    },
+  React.useEffect(() => {
+    if (isAnimating === AnimationDirection.UP) {
+      animationDown.reset();
+      animationUp.start();
+      onStartUpRecording && onStartUpRecording();
+    }
+    if (isAnimating === AnimationDirection.DOWN) {
+      animationUp.reset();
+      animationDown.start();
+      onStartDownRecording && onStartDownRecording();
+    }
+    if (!isAnimating) {
+      animationUp.reset();
+      animationDown.reset();
+      onStopRecording && onStopRecording();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAnimating]);
+
+  const buttonStyles = StyleSheet.create({
     button: {
       width: 100,
       height: 100,
@@ -37,16 +99,42 @@ export const ButtonTranslate: React.FC<ButtonTranslateProps> = ({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    animation: {
+      transform: [{ translateY: moveAnimation }],
+    },
   });
 
   return (
     <View style={styles.container}>
-      <Pressable
-        style={styles.button}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}>
-        <MicrophoneIcon color="white" width={50} height={50} />
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <Animated.View style={buttonStyles.animation}>
+          <Pressable
+            style={buttonStyles.button}
+            onTouchMove={handleTouchMove}
+            onTouchStart={handlePressIn}
+            onTouchEnd={handlePressOut}>
+            <MicrophoneIcon color="white" width={50} height={50} />
+          </Pressable>
+        </Animated.View>
+      </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 102,
+    height: 180,
+    borderRadius: 100,
+    borderColor: colors.secondary[300],
+    borderWidth: 1,
+    overflow: 'hidden',
+    backgroundColor: colors.secondary[200],
+  },
+});

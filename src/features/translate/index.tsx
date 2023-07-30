@@ -93,12 +93,17 @@ export const Translate: React.FC = () => {
             </View>
             <View style={styles.absoluteContainer}>
               <ButtonTranslate
-                onPressIn={() =>
+                onStartUpRecording={() =>
                   sourceLanguage &&
                   targetLanguage &&
                   startRecording(sourceLanguage.code, targetLanguage.code)
                 }
-                onPressOut={stopRecording}
+                onStartDownRecording={() =>
+                  sourceLanguage &&
+                  targetLanguage &&
+                  startRecording(targetLanguage.code, sourceLanguage.code)
+                }
+                onStopRecording={stopRecording}
               />
             </View>
             <View style={styles.contentBottomContainer}>
