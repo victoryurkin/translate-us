@@ -22,8 +22,10 @@ enum IncomingEvents {
 
 interface Job {
   isRunning: boolean;
+  startTime: number;
   isTranscriptionRunning: boolean;
   isTranslationRunning: boolean;
+  isWaitingTranscriptionEndSignal: boolean;
   sourceCode: string;
   targetCode: string;
   transcription: string;
@@ -160,8 +162,10 @@ export const useStream = () => {
       });
       const updatedJob = {
         isRunning: true,
+        startTime: Date.now(),
         isTranscriptionRunning: true,
         isTranslationRunning: false,
+        isWaitingTranscriptionEndSignal: false,
         sourceCode: sourceLanguage,
         targetCode: targetLanguage,
         transcription: '',
@@ -198,6 +202,22 @@ export const useStream = () => {
     isRecording.current = false;
     MicrophoneStream.stop();
     socketRef.current?.emit(OutgoingEvents.STOP_RECORDING);
+    if (jobRef.current) {
+      const updateJob = produce(jobRef.current, draft => {
+        draft.isWaitingTranscriptionEndSignal = true;
+      });
+      jobRef.current = updateJob;
+      setJob(updateJob);
+      setTimeout(() => {
+        if (jobRef.current) {
+          const updatedJob = produce(jobRef.current, draft => {
+            draft.isWaitingTranscriptionEndSignal = false;
+          });
+          jobRef.current = updatedJob;
+          setJob(updatedJob);
+        }
+      }, 1000);
+    }
   }, []);
 
   return {

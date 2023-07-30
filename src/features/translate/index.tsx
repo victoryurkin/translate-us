@@ -84,7 +84,9 @@ export const Translate: React.FC = () => {
                     job?.transcription}
                   {job?.targetCode === sourceLanguage?.code && (
                     <>
-                      {job?.isTranslationRunning && 'Loading...'}
+                      {(job?.isTranslationRunning ||
+                        job?.isWaitingTranscriptionEndSignal) &&
+                        'Loading...'}
                       {job?.translation}
                     </>
                   )}
@@ -104,6 +106,10 @@ export const Translate: React.FC = () => {
                   startRecording(targetLanguage.code, sourceLanguage.code)
                 }
                 onStopRecording={stopRecording}
+                isLoading={
+                  job?.isTranslationRunning ||
+                  job?.isWaitingTranscriptionEndSignal
+                }
               />
             </View>
             <View style={styles.contentBottomContainer}>
@@ -113,7 +119,9 @@ export const Translate: React.FC = () => {
                     job?.transcription}
                   {job?.targetCode === targetLanguage?.code && (
                     <>
-                      {job?.isTranslationRunning && 'Loading...'}
+                      {(job?.isTranslationRunning ||
+                        job?.isWaitingTranscriptionEndSignal) &&
+                        'Loading...'}
                       {job?.translation}
                     </>
                   )}

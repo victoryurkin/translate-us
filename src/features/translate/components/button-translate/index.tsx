@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { MicrophoneIcon } from 'react-native-heroicons/solid';
 import {
   Animated,
@@ -13,6 +13,7 @@ interface ButtonTranslateProps {
   onStartUpRecording?: () => void;
   onStartDownRecording?: () => void;
   onStopRecording?: () => void;
+  isLoading?: boolean;
 }
 
 enum AnimationDirection {
@@ -24,6 +25,7 @@ export const ButtonTranslate: React.FC<ButtonTranslateProps> = ({
   onStartUpRecording,
   onStartDownRecording,
   onStopRecording,
+  isLoading = false,
 }) => {
   const [isActive, setActive] = React.useState(false);
   const [isAnimating, setAnimating] = React.useState<AnimationDirection>();
@@ -50,25 +52,35 @@ export const ButtonTranslate: React.FC<ButtonTranslateProps> = ({
     [moveAnimation],
   );
 
-  const handleTouchMove = (e: GestureResponderEvent) => {
-    if (initPositionRef.current) {
-      if (initPositionRef.current - e.nativeEvent.pageY > 0) {
-        setAnimating(AnimationDirection.UP);
-      } else {
-        setAnimating(AnimationDirection.DOWN);
+  const handleTouchMove = useCallback(
+    (e: GestureResponderEvent) => {
+      if (initPositionRef.current && !isLoading) {
+        if (initPositionRef.current - e.nativeEvent.pageY > 0) {
+          setAnimating(AnimationDirection.UP);
+        } else {
+          setAnimating(AnimationDirection.DOWN);
+        }
       }
+    },
+    [isLoading],
+  );
+
+  const handlePressIn = useCallback(
+    (e: GestureResponderEvent) => {
+      if (!isLoading) {
+        initPositionRef.current = e.nativeEvent.pageY;
+        setActive(true);
+      }
+    },
+    [isLoading],
+  );
+
+  const handlePressOut = useCallback(() => {
+    if (!isLoading) {
+      setActive(false);
+      setAnimating(undefined);
     }
-  };
-
-  const handlePressIn = (e: GestureResponderEvent) => {
-    initPositionRef.current = e.nativeEvent.pageY;
-    setActive(true);
-  };
-
-  const handlePressOut = () => {
-    setActive(false);
-    setAnimating(undefined);
-  };
+  }, [isLoading]);
 
   React.useEffect(() => {
     if (isAnimating === AnimationDirection.UP) {
@@ -98,6 +110,7 @@ export const ButtonTranslate: React.FC<ButtonTranslateProps> = ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      opacity: isLoading ? 0.75 : 1,
     },
     animation: {
       transform: [{ translateY: moveAnimation }],
