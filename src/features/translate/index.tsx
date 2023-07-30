@@ -14,9 +14,12 @@ import {
 import { Settings } from './settings';
 import { Language, supportedLanguages } from '@translate-us/constants';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useStream } from './stream';
 
 export const Translate: React.FC = () => {
   const { isLoading, user } = useUser();
+  const { connect, disconnect, startRecording, stopRecording, job } =
+    useStream();
 
   const [sourceLanguage, setSourceLanguage] = React.useState<Language>();
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
@@ -35,6 +38,15 @@ export const Translate: React.FC = () => {
         setTargetLanguage(supportedLanguages['es-US']);
       }
     }
+  }, [isLoading]);
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      setTimeout(() => {
+        connect();
+      }, 100);
+    }
+    return disconnect();
   }, [isLoading]);
 
   return (
@@ -67,15 +79,40 @@ export const Translate: React.FC = () => {
             </View>
             <View style={styles.contentTopContainer}>
               <ScrollView contentContainerStyle={styles.content}>
-                <Text />
+                <Text>
+                  {job?.sourceCode === sourceLanguage?.code &&
+                    job?.transcription}
+                  {job?.targetCode === sourceLanguage?.code && (
+                    <>
+                      {job?.isTranslationRunning && 'Loading...'}
+                      {job?.translation}
+                    </>
+                  )}
+                </Text>
               </ScrollView>
             </View>
             <View style={styles.absoluteContainer}>
-              <ButtonTranslate />
+              <ButtonTranslate
+                onPressIn={() =>
+                  sourceLanguage &&
+                  targetLanguage &&
+                  startRecording(sourceLanguage.code, targetLanguage.code)
+                }
+                onPressOut={stopRecording}
+              />
             </View>
             <View style={styles.contentBottomContainer}>
               <ScrollView contentContainerStyle={styles.content}>
-                <Text />
+                <Text>
+                  {job?.sourceCode === targetLanguage?.code &&
+                    job?.transcription}
+                  {job?.targetCode === targetLanguage?.code && (
+                    <>
+                      {job?.isTranslationRunning && 'Loading...'}
+                      {job?.translation}
+                    </>
+                  )}
+                </Text>
               </ScrollView>
             </View>
             <View style={styles.absoluteContainer}>
