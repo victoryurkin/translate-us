@@ -1,4 +1,5 @@
 import React from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth, Translate } from '@translate-us/features';
@@ -9,6 +10,10 @@ const Stack = createNativeStackNavigator();
 
 export const Router = () => {
   const { isLoading, authUser } = useAuth();
+
+  React.useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   return (
     <React.Fragment>

@@ -1,4 +1,4 @@
-package com.translateus;
+package com.whiteof.translateus;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;

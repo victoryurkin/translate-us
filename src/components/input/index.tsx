@@ -18,6 +18,7 @@ export const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
     <TextInput
       onChangeText={props.onChange as ((text: string) => void) | undefined}
       style={styles.input}
+      placeholderTextColor={colors.secondary[400]}
       ref={ref}
       {...props}
     />
