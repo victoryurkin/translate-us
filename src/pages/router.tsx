@@ -24,7 +24,6 @@ export const Router = () => {
 
     // Request permissions Android
     check(PERMISSIONS.ANDROID.RECORD_AUDIO).then(result => {
-      console.log('!!!', result);
       if (result !== RESULTS.GRANTED) {
         request(PERMISSIONS.ANDROID.RECORD_AUDIO);
       }
