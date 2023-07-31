@@ -483,6 +483,8 @@ PODS:
     - React-Core
   - RNLiveAudioStream (1.1.1):
     - React
+  - RNPermissions (3.8.4):
+    - React-Core
   - RNReanimated (3.3.0):
     - DoubleConversion
     - FBLazyVector
@@ -576,6 +578,7 @@ DEPENDENCIES:
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLiveAudioStream (from `../node_modules/react-native-live-audio-stream`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSound (from `../node_modules/react-native-sound`)
@@ -694,6 +697,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNLiveAudioStream:
     :path: "../node_modules/react-native-live-audio-stream"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -764,6 +769,7 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNLiveAudioStream: 02584d52711b6b9f268cb371a4b1bdd76ab3e079
+  RNPermissions: 32f7c4a1f056bdb6750f141ae2b743c5d1464124
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852

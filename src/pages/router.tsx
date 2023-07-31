@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth, Translate } from '@translate-us/features';
 import { useAuth } from '@translate-us/context';
 import { Text } from 'react-native';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,21 @@ export const Router = () => {
 
   React.useEffect(() => {
     SplashScreen.hide();
+
+    // Request permissions iOS
+    check(PERMISSIONS.IOS.MICROPHONE).then(result => {
+      if (result !== RESULTS.GRANTED) {
+        request(PERMISSIONS.IOS.MICROPHONE);
+      }
+    });
+
+    // Request permissions Android
+    check(PERMISSIONS.ANDROID.RECORD_AUDIO).then(result => {
+      console.log('!!!', result);
+      if (result !== RESULTS.GRANTED) {
+        request(PERMISSIONS.ANDROID.RECORD_AUDIO);
+      }
+    });
   }, []);
 
   return (
