@@ -10,6 +10,7 @@
 		00E356F31AD99517003FC87E /* TranslateUsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TranslateUsTests.m */; };
 		0779B9B92A6CC35D002B8099 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0779B9B82A6CC35C002B8099 /* GoogleService-Info.plist */; };
 		0779B9BA2A6CC35D002B8099 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0779B9B82A6CC35C002B8099 /* GoogleService-Info.plist */; };
+		0795AF4E2A7EBE3800280C3A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0795AF4D2A7EBE3800280C3A /* StoreKit.framework */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -34,6 +35,7 @@
 		00E356F21AD99517003FC87E /* TranslateUsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TranslateUsTests.m; sourceTree = "<group>"; };
 		0720AA212A7756B900AF7883 /* TranslateUs.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TranslateUs.entitlements; path = TranslateUs/TranslateUs.entitlements; sourceTree = "<group>"; };
 		0779B9B82A6CC35C002B8099 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0795AF4D2A7EBE3800280C3A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		13B07F961A680F5B00A75B9A /* TranslateUs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TranslateUs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = TranslateUs/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = TranslateUs/AppDelegate.mm; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F95C4C144308C54D5ED8D60 /* Pods_TranslateUs.framework in Frameworks */,
+				0795AF4E2A7EBE3800280C3A /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +107,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0795AF4D2A7EBE3800280C3A /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				D7B0CB51DFB3AD868B97C6EF /* Pods_TranslateUs.framework */,
 				709DBC93F29CAABBDF3A1F46 /* Pods_TranslateUs_TranslateUsTests.framework */,

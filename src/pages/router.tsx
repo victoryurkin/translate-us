@@ -6,6 +6,7 @@ import { Auth, Translate } from '@translate-us/features';
 import { useAuth } from '@translate-us/context';
 import { Text } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+// import { Subscriptions } from '@translate-us/features';
 
 const Stack = createNativeStackNavigator();
 
