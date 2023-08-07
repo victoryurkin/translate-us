@@ -16,7 +16,7 @@ export const Content: React.FC = () => {
     () =>
       Animated.timing(translateAnim, {
         toValue: -screenDimensions.width,
-        duration: 200,
+        duration: 300,
         useNativeDriver: true,
       }),
     [translateAnim],
@@ -108,10 +108,24 @@ export const Content: React.FC = () => {
 
       <View style={styles.container}>
         {legalContent === 'privacy' && (
-          <PrivacyPolicy onBack={() => animationRight.start()} />
+          <PrivacyPolicy
+            onBack={() => {
+              animationRight.start();
+              setTimeout(() => {
+                setLegalContent(undefined);
+              }, 300);
+            }}
+          />
         )}
         {legalContent === 'terms' && (
-          <TermsOfUse onBack={() => animationRight.start()} />
+          <TermsOfUse
+            onBack={() => {
+              animationRight.start();
+              setTimeout(() => {
+                setLegalContent(undefined);
+              }, 300);
+            }}
+          />
         )}
       </View>
     </Animated.View>
