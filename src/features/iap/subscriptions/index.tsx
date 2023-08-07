@@ -1,94 +1,77 @@
 import React from 'react';
-import { Animated, ScrollView, StyleSheet, Text } from 'react-native';
-import { initConnection, getProducts, endConnection } from 'react-native-iap';
+import {
+  Animated,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import { Modal } from '@translate-us/components';
+import { useIAP, withIAPContext } from 'react-native-iap';
+import { APP_STORE_SECRET } from '@env';
+import { Content } from './content';
+
+const screenDimensions = Dimensions.get('screen');
 
 export const Subscriptions: React.FC = () => {
-  const fadeAnim = React.useRef(new Animated.Value(0)).current;
-  const translateAnim = React.useRef(new Animated.Value(0)).current;
+  // const {
+  //   connected,
+  //   subscriptions,
+  //   purchaseHistory,
+  //   getSubscriptions,
+  //   getPurchaseHistory,
+  // } = useIAP();
 
-  const animationUp = React.useMemo(
-    () =>
-      Animated.timing(translateAnim, {
-        toValue: -40,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    [translateAnim],
-  );
+  // const subscriptionSkus = Platform.select({
+  //   ios: ['subMonthly', 'subYearly'],
+  // });
 
-  const animationDown = React.useMemo(
-    () =>
-      Animated.timing(translateAnim, {
-        toValue: 40,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    [translateAnim],
-  );
+  // React.useEffect(() => {
+  //   const handleGetSubscriptions = async () => {
+  //     try {
+  //       if (subscriptionSkus) {
+  //         await getSubscriptions({ skus: subscriptionSkus });
+  //       }
+  //     } catch (error) {
+  //       console.log('Error getting subscriptions: ', error);
+  //     }
+  //   };
 
-  React.useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        await initConnection();
-        const products = getProducts({
-          skus: ['subMonthly', 'subYearly'],
-        });
-        console.log('!!!!', products);
-      } catch (error) {
-        console.log('Error loading IAP: ', error);
-      }
-    };
+  //   const handleGetPurchaseHistory = async () => {
+  //     try {
+  //       await getPurchaseHistory();
+  //     } catch (error) {
+  //       console.log('Error getting purchase history: ', error);
+  //     }
+  //   };
 
-    loadProducts();
+  //   if (connected) {
+  //     handleGetSubscriptions();
+  //     handleGetPurchaseHistory();
+  //   }
+  // }, [connected]);
 
-    Animated.timing(fadeAnim, {
-      toValue: 0.7,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start();
-
-    return () => {
-      endConnection();
-    };
-  }, [fadeAnim, translateAnim]);
-
-  const animationStyles = StyleSheet.create({
-    modal: {
-      backgroundColor: 'white',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      height: '90%',
-      borderTopLeftRadius: 30,
-      borderTopRightRadius: 30,
-      transform: [{ translateY: translateAnim }],
-    },
-  });
+  // React.useEffect(() => {
+  //   if (
+  //     connected &&
+  //     purchaseHistory &&
+  //     subscriptionSkus &&
+  //     purchaseHistory.find(
+  //       x => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
+  //     )
+  //   ) {
+  //     console.log('Already purchased');
+  //   } else {
+  //     toggleModal(true);
+  //   }
+  // }, [purchaseHistory]);
 
   return (
-    <React.Fragment>
-      <Animated.View
-        style={{
-          ...styles.background,
-          opacity: fadeAnim,
-        }}
-      />
-      <Animated.ScrollView style={animationStyles.modal}>
-        <Text>1123</Text>
-      </Animated.ScrollView>
-    </React.Fragment>
+    <Modal isOpen={true}>
+      <Content />
+    </Modal>
   );
 };
 
-const styles = StyleSheet.create({
-  background: {
-    backgroundColor: 'black',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-  },
-  modal: {},
-});
+export default withIAPContext(Subscriptions);

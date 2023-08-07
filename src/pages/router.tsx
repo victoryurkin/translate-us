@@ -2,11 +2,10 @@ import React from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Auth, Translate } from '@translate-us/features';
+import { Auth, Subscriptions, Translate } from '@translate-us/features';
 import { useAuth } from '@translate-us/context';
 import { Text } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-// import { Subscriptions } from '@translate-us/features';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +54,7 @@ export const Router = () => {
           </Stack.Navigator>
         </NavigationContainer>
       )}
+      <Subscriptions />
     </React.Fragment>
   );
 };
