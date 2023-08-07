@@ -163,6 +163,8 @@ const styles = StyleSheet.create({
 
   buttonsContainer: {
     backgroundColor: 'white',
+    position: 'relative',
+    zIndex: 30,
   },
   topButtons: {
     display: 'flex',
