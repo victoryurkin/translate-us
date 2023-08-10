@@ -13,9 +13,15 @@ interface ButtonProps {
   icon: ImageSourcePropType;
   title: string;
   subtitle: string;
+  onPress: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({ icon, title, subtitle }) => {
+export const Button: React.FC<ButtonProps> = ({
+  icon,
+  title,
+  subtitle,
+  onPress,
+}) => {
   const [isPressed, setPressed] = React.useState(false);
   return (
     <Pressable
@@ -23,6 +29,7 @@ export const Button: React.FC<ButtonProps> = ({ icon, title, subtitle }) => {
         styles.button,
         isPressed ? styles.buttonPressed : styles.buttonShadow,
       ]}
+      onPress={onPress}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}>
       <Image source={icon} style={styles.icon} />

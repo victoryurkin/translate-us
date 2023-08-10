@@ -9,7 +9,17 @@ import { TermsOfUse } from './terms';
 
 const screenDimensions = Dimensions.get('screen');
 
-export const Content: React.FC = () => {
+interface Props {
+  isLoading: boolean;
+  onSubscriptionPurchase: (productId: string) => void;
+  onProductPurchase: (productId: string) => void;
+}
+
+export const Content: React.FC<Props> = ({
+  isLoading,
+  onSubscriptionPurchase,
+  onProductPurchase,
+}) => {
   const [legalContent, setLegalContent] = React.useState<'privacy' | 'terms'>();
   const translateAnim = React.useRef(new Animated.Value(0)).current;
   const animationLeft = React.useMemo(
@@ -32,103 +42,109 @@ export const Content: React.FC = () => {
   );
 
   return (
-    <Animated.View
-      style={[
-        styles.mainContainer,
-        { transform: [{ translateX: translateAnim }] },
-      ]}>
-      <View style={styles.container}>
-        <LinearGradient
-          colors={[colors.primary[700], colors.primary[500]]}
-          style={styles.topBar}>
-          <Text style={styles.header}>Translate Us - Full Access</Text>
-          <Text style={styles.subheader}>Start 5-Day Free Trial</Text>
-        </LinearGradient>
+    <React.Fragment>
+      <Animated.View
+        style={[
+          styles.mainContainer,
+          { transform: [{ translateX: translateAnim }] },
+        ]}>
+        <View style={styles.container}>
+          <LinearGradient
+            colors={[colors.primary[700], colors.primary[500]]}
+            style={styles.topBar}>
+            <Text style={styles.header}>Translate Us - Full Access</Text>
+            <Text style={styles.subheader}>Start 5-Day Free Trial</Text>
+          </LinearGradient>
 
-        <View style={styles.buttonsContainer}>
-          <View style={styles.topButtons}>
-            <Button
-              icon={require('../../../assets/images/sub-month.png')}
-              title="$8.99/month"
-              subtitle="5 days free, then"
-            />
-            <Button
-              icon={require('../../../assets/images/sub-year.png')}
-              title="$79.99/year"
-              subtitle="5 days free, then"
-            />
+          <View style={styles.buttonsContainer}>
+            <View style={styles.topButtons}>
+              <Button
+                icon={require('../../../assets/images/sub-month.png')}
+                title="$8.99/month"
+                subtitle="5 days free, then"
+                onPress={() => onSubscriptionPurchase('subMonthly')}
+              />
+              <Button
+                icon={require('../../../assets/images/sub-year.png')}
+                title="$79.99/year"
+                subtitle="5 days free, then"
+                onPress={() => onSubscriptionPurchase('subYearly')}
+              />
+            </View>
+            <View style={styles.bottomButtons}>
+              <Button
+                icon={require('../../../assets/images/on-demand.png')}
+                title="$0.99 for one day access"
+                subtitle="pay as you need"
+                onPress={() => onProductPurchase('prodDay')}
+              />
+            </View>
           </View>
-          <View style={styles.bottomButtons}>
-            <Button
-              icon={require('../../../assets/images/on-demand.png')}
-              title="$0.99 for one day access"
-              subtitle="pay as you need"
+
+          <View style={styles.linksContainer}>
+            <Link
+              title="Restore"
+              size={fontSize.lg}
+              color={colors.primary[600]}
+              onPress={() => console.log('!!!')}
             />
+            <View style={styles.bottomLinksContainer}>
+              <Link
+                title="Terms of Use"
+                size={fontSize.md}
+                color={colors.secondary[600]}
+                onPress={() => {
+                  setLegalContent('terms');
+                  animationLeft.start();
+                }}
+              />
+              <Link
+                title="Privacy Policy"
+                size={fontSize.md}
+                color={colors.secondary[600]}
+                onPress={() => {
+                  setLegalContent('privacy');
+                  animationLeft.start();
+                }}
+              />
+            </View>
+          </View>
+
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.description}>
+              Monthly or yearly recurring billing, can be canceled anytime
+            </Text>
+            <Text style={styles.description}>
+              No recurring billing, if you purchase one day access.
+            </Text>
           </View>
         </View>
 
-        <View style={styles.linksContainer}>
-          <Link
-            title="Restore"
-            size={fontSize.lg}
-            color={colors.primary[600]}
-            onPress={() => console.log('!!!')}
-          />
-          <View style={styles.bottomLinksContainer}>
-            <Link
-              title="Terms of Use"
-              size={fontSize.md}
-              color={colors.secondary[600]}
-              onPress={() => {
-                setLegalContent('terms');
-                animationLeft.start();
+        <View style={styles.container}>
+          {legalContent === 'privacy' && (
+            <PrivacyPolicy
+              onBack={() => {
+                animationRight.start();
+                setTimeout(() => {
+                  setLegalContent(undefined);
+                }, 300);
               }}
             />
-            <Link
-              title="Privacy Policy"
-              size={fontSize.md}
-              color={colors.secondary[600]}
-              onPress={() => {
-                setLegalContent('privacy');
-                animationLeft.start();
+          )}
+          {legalContent === 'terms' && (
+            <TermsOfUse
+              onBack={() => {
+                animationRight.start();
+                setTimeout(() => {
+                  setLegalContent(undefined);
+                }, 300);
               }}
             />
-          </View>
+          )}
         </View>
-
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            Monthly or yearly recurring billing, can be canceled anytime
-          </Text>
-          <Text style={styles.description}>
-            No recurring billing, if you purchase one day access.
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.container}>
-        {legalContent === 'privacy' && (
-          <PrivacyPolicy
-            onBack={() => {
-              animationRight.start();
-              setTimeout(() => {
-                setLegalContent(undefined);
-              }, 300);
-            }}
-          />
-        )}
-        {legalContent === 'terms' && (
-          <TermsOfUse
-            onBack={() => {
-              animationRight.start();
-              setTimeout(() => {
-                setLegalContent(undefined);
-              }, 300);
-            }}
-          />
-        )}
-      </View>
-    </Animated.View>
+      </Animated.View>
+      {isLoading && <View style={styles.loaderContainer} />}
+    </React.Fragment>
   );
 };
 
@@ -207,5 +223,15 @@ const styles = StyleSheet.create({
 
   legalHeader: {
     borderBottomColor: colors.secondary[300],
+  },
+
+  loaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: colors.secondary[200],
+    opacity: 0.3,
   },
 });
