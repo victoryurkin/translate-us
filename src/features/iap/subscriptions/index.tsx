@@ -8,6 +8,7 @@ import {
   requestSubscription,
   requestPurchase,
   validateReceiptIos,
+  Purchase,
 } from 'react-native-iap';
 import { APP_STORE_SECRET } from '@env';
 import { Content } from './content';
@@ -16,8 +17,6 @@ import { iosSubscriptions, iosProducts } from './constants';
 export const Subscriptions: React.FC = () => {
   const {
     connected,
-    subscriptions,
-    products,
     purchaseHistory,
     currentPurchase,
     finishTransaction,
@@ -32,6 +31,8 @@ export const Subscriptions: React.FC = () => {
 
   const [isOpen, toggleModal] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [isPurchaseHistoryLoaded, setPurchaseHistoryLoaded] =
+    React.useState(false);
 
   React.useEffect(() => {
     const handleGetSubscriptions = async () => {
@@ -59,6 +60,8 @@ export const Subscriptions: React.FC = () => {
         await getPurchaseHistory();
       } catch (error) {
         console.log('Error getting purchase history: ', error);
+      } finally {
+        setPurchaseHistoryLoaded(true);
       }
     };
 
@@ -70,22 +73,65 @@ export const Subscriptions: React.FC = () => {
   }, [connected]);
 
   React.useEffect(() => {
-    if (
-      connected &&
-      purchaseHistory &&
-      subscriptionSkus &&
-      productSkus &&
-      purchaseHistory.find(
-        x =>
-          x.productId ===
-          (subscriptionSkus[0] || subscriptionSkus[1] || productSkus[0]),
-      )
-    ) {
-      console.log('Already purchased');
-    } else {
-      toggleModal(true);
+    const checkActiveSubscription = async (purchases: Purchase[]) => {
+      try {
+        if (Platform.OS === 'ios') {
+          if (purchases.length > 0) {
+            const sortedPurchases = purchases.sort(
+              (a, b) => b.transactionDate - a.transactionDate,
+            );
+            const latestReceipt = sortedPurchases[0].transactionReceipt;
+
+            const isTestEnvironment = __DEV__;
+            const decodedReceipt = await validateReceiptIos({
+              receiptBody: {
+                'receipt-data': latestReceipt,
+                password: APP_STORE_SECRET,
+              },
+              isTest: isTestEnvironment,
+            });
+            const { latest_receipt_info: latestReceiptInfo } = decodedReceipt;
+            const isSubscriptionActive = !!latestReceiptInfo.find(
+              (receipt: any) => {
+                const expirationInMilliseconds = Number(
+                  receipt.expires_date_ms,
+                );
+                const nowInMilliseconds = Date.now();
+                return expirationInMilliseconds > nowInMilliseconds;
+              },
+            );
+            if (isSubscriptionActive) {
+              toggleModal(false);
+            } else {
+              toggleModal(true);
+            }
+          } else {
+            toggleModal(true);
+          }
+        }
+
+        if (Platform.OS === 'android') {
+          // for (let i = 0; i < purchases.length; i++) {
+          //   if (SUBSCRIPTIONS.ALL.includes(purchases[i].productId)) {
+          //     toggleModal(false);
+          //     return;
+          //   }
+          // }
+          if (purchases.length > 0) {
+            toggleModal(false);
+          } else {
+            toggleModal(true);
+          }
+        }
+      } catch (error) {
+        console.log('Error checking for active subscription: ', error);
+      }
+    };
+
+    if (isPurchaseHistoryLoaded) {
+      checkActiveSubscription(purchaseHistory);
     }
-  }, [subscriptions, products, purchaseHistory]);
+  }, [isPurchaseHistoryLoaded, purchaseHistory]);
 
   // Purchase Subscription
 
@@ -117,44 +163,24 @@ export const Subscriptions: React.FC = () => {
     }
   };
 
-  // Purchase handler
+  // Handle Purchase completed
 
   React.useEffect(() => {
-    const checkCurrentPurchase = async (purchase: any) => {
-      if (purchase) {
-        try {
-          const receipt = purchase.transactionReceipt;
-          if (receipt) {
-            if (Platform.OS === 'ios') {
-              const isTestEnvironment = __DEV__;
-
-              //send receipt body to apple server to validete
-              // isTestEnvironment,
-
-              const appleReceiptResponse = await validateReceiptIos({
-                receiptBody: {
-                  'receipt-data': receipt,
-                  password: APP_STORE_SECRET,
-                },
-                isTest: isTestEnvironment,
-              });
-
-              //if receipt is valid
-              if (appleReceiptResponse) {
-                const { status } = appleReceiptResponse;
-                if (status) {
-                  // console.log('!!!', appleReceiptResponse);
-                }
-              }
-              return;
-            }
-          }
-        } catch (error) {
-          console.log('error', error);
+    const checkCurrentPurchase = async () => {
+      try {
+        if (currentPurchase?.productId) {
+          await finishTransaction({
+            purchase: currentPurchase,
+            isConsumable: true,
+          });
+          toggleModal(false);
         }
+      } catch (error) {
+        console.log('Error validating current purchase: ', error);
       }
     };
-    checkCurrentPurchase(currentPurchase);
+
+    checkCurrentPurchase();
   }, [currentPurchase, finishTransaction]);
 
   return (
