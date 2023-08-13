@@ -6,7 +6,10 @@
  */
 
 import React from 'react';
+import { setup } from 'react-native-iap';
 import { AppMiddleware } from '@translate-us/middleware';
+
+setup({ storekitMode: 'STOREKIT2_MODE' });
 
 function App(): JSX.Element {
   return <AppMiddleware />;

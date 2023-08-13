@@ -7,10 +7,10 @@ import {
   withIAPContext,
   requestSubscription,
   requestPurchase,
-  validateReceiptIos,
   Purchase,
+  IapIosSk2,
 } from 'react-native-iap';
-import { APP_STORE_SECRET } from '@env';
+import { purchaseService } from '@translate-us/services';
 import { Content } from './content';
 import { iosSubscriptions, iosProducts } from './constants';
 
@@ -76,37 +76,32 @@ export const Subscriptions: React.FC = () => {
     const checkActiveSubscription = async (purchases: Purchase[]) => {
       try {
         if (Platform.OS === 'ios') {
-          if (purchases.length > 0) {
-            const sortedPurchases = purchases.sort(
-              (a, b) => b.transactionDate - a.transactionDate,
-            );
-            const latestReceipt = sortedPurchases[0].transactionReceipt;
-
-            const isTestEnvironment = __DEV__;
-            const decodedReceipt = await validateReceiptIos({
-              receiptBody: {
-                'receipt-data': latestReceipt,
-                password: APP_STORE_SECRET,
-              },
-              isTest: isTestEnvironment,
-            });
-            const { latest_receipt_info: latestReceiptInfo } = decodedReceipt;
-            const isSubscriptionActive = !!latestReceiptInfo.find(
-              (receipt: any) => {
-                const expirationInMilliseconds = Number(
-                  receipt.expires_date_ms,
-                );
-                const nowInMilliseconds = Date.now();
-                return expirationInMilliseconds > nowInMilliseconds;
-              },
-            );
-            if (isSubscriptionActive) {
-              toggleModal(false);
+          const promises = iosSubscriptions.ios.map(name =>
+            IapIosSk2.subscriptionStatus(name),
+          );
+          const results = await Promise.all(promises);
+          if (
+            results.find(result =>
+              result.find(status => status.state === 'subscribed'),
+            )
+          ) {
+            toggleModal(false);
+          } else {
+            // Check for products
+            const productPurchase = await purchaseService.getPurchase();
+            if (productPurchase) {
+              const nowInMilliseconds = Date.now();
+              if (
+                productPurchase.transactionDate + 24 * 60 * 60 * 1000 >
+                nowInMilliseconds
+              ) {
+                toggleModal(false);
+              } else {
+                toggleModal(true);
+              }
             } else {
               toggleModal(true);
             }
-          } else {
-            toggleModal(true);
           }
         }
 
@@ -120,7 +115,21 @@ export const Subscriptions: React.FC = () => {
           if (purchases.length > 0) {
             toggleModal(false);
           } else {
-            toggleModal(true);
+            // Check for products
+            const productPurchase = await purchaseService.getPurchase();
+            if (productPurchase) {
+              const nowInMilliseconds = Date.now();
+              if (
+                productPurchase.transactionDate + 24 * 60 * 60 * 1000 >
+                nowInMilliseconds
+              ) {
+                toggleModal(false);
+              } else {
+                toggleModal(true);
+              }
+            } else {
+              toggleModal(true);
+            }
           }
         }
       } catch (error) {
@@ -169,9 +178,17 @@ export const Subscriptions: React.FC = () => {
     const checkCurrentPurchase = async () => {
       try {
         if (currentPurchase?.productId) {
+          if (iosProducts.ios.includes(currentPurchase.productId)) {
+            // Save receipt
+            await purchaseService.setPurchase(currentPurchase);
+          }
           await finishTransaction({
             purchase: currentPurchase,
-            isConsumable: true,
+            isConsumable: iosSubscriptions.ios.includes(
+              currentPurchase.productId,
+            )
+              ? false
+              : true,
           });
           toggleModal(false);
         }

@@ -65,6 +65,7 @@
     "node": ">=16"
   },
   "reactNativePermissionsIOS": [
-    "Microphone"
+    "Microphone",
+    "StoreKit"
   ]
 }

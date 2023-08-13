@@ -1,1 +1,2 @@
-export * from './translate/translate';
+export * from './translate';
+export * from './iap';
