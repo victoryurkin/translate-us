@@ -10,6 +10,7 @@ interface ModalProps extends React.PropsWithChildren {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
+  const [isPresented, setPresented] = React.useState(isOpen);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateAnim = React.useRef(
     new Animated.Value(screenDimensions.height - 80),
@@ -65,18 +66,32 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        setPresented(false);
+      }, 300);
+    } else {
+      setPresented(true);
+    }
+  }, [isOpen]);
+
   return (
     <React.Fragment>
-      <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
-      <Animated.View
-        style={[
-          styles.modal,
-          {
-            transform: [{ translateY: translateAnim }],
-          },
-        ]}>
-        <ScrollView style={styles.content}>{children}</ScrollView>
-      </Animated.View>
+      {isPresented && (
+        <React.Fragment>
+          <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
+          <Animated.View
+            style={[
+              styles.modal,
+              {
+                transform: [{ translateY: translateAnim }],
+              },
+            ]}>
+            <ScrollView style={styles.content}>{children}</ScrollView>
+          </Animated.View>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

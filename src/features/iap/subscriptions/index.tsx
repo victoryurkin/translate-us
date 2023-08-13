@@ -81,6 +81,8 @@ export const Subscriptions: React.FC = () => {
           );
           const results = await Promise.all(promises);
           if (
+            results &&
+            results.length > 0 &&
             results.find(result =>
               result.find(status => status.state === 'subscribed'),
             )
@@ -134,6 +136,7 @@ export const Subscriptions: React.FC = () => {
         }
       } catch (error) {
         console.log('Error checking for active subscription: ', error);
+        toggleModal(true);
       }
     };
 
