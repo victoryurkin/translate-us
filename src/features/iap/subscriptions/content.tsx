@@ -53,22 +53,22 @@ export const Content: React.FC<Props> = ({
             colors={[colors.primary[700], colors.primary[500]]}
             style={styles.topBar}>
             <Text style={styles.header}>Translate Us - Full Access</Text>
-            <Text style={styles.subheader}>Start 5-Day Free Trial</Text>
+            <Text style={styles.subheader}>Start 3-Day Free Trial</Text>
           </LinearGradient>
 
           <View style={styles.buttonsContainer}>
             <View style={styles.topButtons}>
               <Button
                 icon={require('../../../assets/images/sub-month.png')}
-                title="$8.99/month"
-                subtitle="5 days free, then"
-                onPress={() => onSubscriptionPurchase('subMonthly')}
+                title="$9.99/month"
+                subtitle="3 days free, then"
+                onPress={() => onSubscriptionPurchase('subMonth')}
               />
               <Button
                 icon={require('../../../assets/images/sub-year.png')}
-                title="$79.99/year"
-                subtitle="5 days free, then"
-                onPress={() => onSubscriptionPurchase('subYearly')}
+                title="$59.99/year"
+                subtitle="3 days free, then"
+                onPress={() => onSubscriptionPurchase('subYear')}
               />
             </View>
             <View style={styles.bottomButtons}>

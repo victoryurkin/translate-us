@@ -1,5 +1,5 @@
 export const iosSubscriptions = {
-  ios: ['subMonthly', 'subYearly'],
+  ios: ['subMonth', 'subYear'],
 };
 
 export const iosProducts = {

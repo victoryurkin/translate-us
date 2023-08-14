@@ -45,7 +45,7 @@ MicrophoneStream.init({
   channels: 1,
   bitsPerSample: 32,
   bufferSize: 4096,
-  wavFile: 'audio.wav',
+  wavFile: `${DocumentDirectoryPath}/audio.wav`,
 });
 
 export const useStream = () => {
@@ -55,10 +55,12 @@ export const useStream = () => {
   const socketRef = useRef<Socket>();
   const isRecording = useRef(false);
 
+  // https://translate-stream-service-ocrtlpqp4q-uk.a.run.app
   const connect = useCallback(() => {
     socketRef.current = io(
       'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app',
       {
+        reconnectionDelayMax: 500,
         auth: {
           token: accessToken,
         },

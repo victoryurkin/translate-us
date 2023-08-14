@@ -83,9 +83,11 @@ export const Subscriptions: React.FC = () => {
           if (
             results &&
             results.length > 0 &&
-            results.find(result =>
-              result.find(status => status.state === 'subscribed'),
-            )
+            results.find(result => {
+              if (result && result.length > 0) {
+                return result.find(status => status.state === 'subscribed');
+              }
+            })
           ) {
             toggleModal(false);
           } else {

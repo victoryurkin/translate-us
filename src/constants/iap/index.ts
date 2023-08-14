@@ -1,6 +1,6 @@
 export enum Subscriptions {
-  MONTHLY = 'subMonthly',
-  YEARLY = 'subYearly',
+  MONTHLY = 'subMonth',
+  YEARLY = 'subYear',
 }
 
 export enum Products {

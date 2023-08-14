@@ -54,6 +54,7 @@ export const Router = () => {
           </Stack.Navigator>
         </NavigationContainer>
       )}
+      {/* {!__DEV__ && <Subscriptions />} */}
       <Subscriptions />
     </React.Fragment>
   );
