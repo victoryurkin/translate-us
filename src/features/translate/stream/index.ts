@@ -119,12 +119,13 @@ export const useStream = () => {
         const path = `${DocumentDirectoryPath}/output.mp3`;
         await writeFile(path, base64, 'base64');
 
+        Sound.setCategory('Playback');
         const sound = new Sound(path, '', error => {
           if (error) {
             console.log('Error loading sound: ', error);
           } else {
             sound.play(async () => {
-              // await unlink(path);
+              sound.release();
             });
           }
         });
