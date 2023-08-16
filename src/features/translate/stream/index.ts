@@ -68,7 +68,8 @@ export const useStream = () => {
     );
 
     socketRef.current.on('disconnect', () => {
-      socketRef.current?.removeAllListeners();
+      // socketRef.current?.removeAllListeners();
+      socketRef.current?.connect();
     });
 
     socketRef.current.on(IncomingEvents.TRANSCRIPTION_DATA, (data: string) => {
@@ -158,6 +159,7 @@ export const useStream = () => {
       if (!socketRef.current) {
         return;
       }
+
       isRecording.current = true;
       socketRef.current.emit(OutgoingEvents.START_RECORDING, {
         sourceLanguage,
@@ -181,7 +183,7 @@ export const useStream = () => {
       // Start microphone stream
       MicrophoneStream.start();
     },
-    [],
+    [connect],
   );
 
   MicrophoneStream.on('data', data => {
