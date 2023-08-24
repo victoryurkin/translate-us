@@ -9,6 +9,7 @@ import React, {
 import { produce } from 'immer';
 import { User } from '@translate-us/models';
 import { userService } from '@translate-us/services';
+import { useAuth } from '@translate-us/context';
 
 /**
  * The User state property been injected to a component using withUser HOC.
@@ -39,11 +40,12 @@ enum DispatchTypes {
   SET_LOADING,
   SET_USER,
   SET_ERROR,
+  RESET,
 }
 
 interface DispatchProps {
   type: DispatchTypes;
-  payload: unknown;
+  payload?: unknown;
 }
 
 const reducer = (state: UserState, { type, payload }: DispatchProps) => {
@@ -63,6 +65,11 @@ const reducer = (state: UserState, { type, payload }: DispatchProps) => {
         ...state,
         error: payload as Error,
       };
+    case DispatchTypes.RESET:
+      return {
+        ...initialState,
+        isLoading: false,
+      };
     default:
       return state;
   }
@@ -76,19 +83,31 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   const [userState, dispatch] = useReducer(reducer, initialState);
   const { user } = userState;
 
+  const { authUser } = useAuth();
+
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const response = await userService.getUser();
+        dispatch({ type: DispatchTypes.SET_LOADING, payload: true });
+        const response = await userService.getUser(authUser!.uid);
         dispatch({ type: DispatchTypes.SET_USER, payload: response });
       } catch (error) {
+        console.log('^^', error);
         dispatch({ type: DispatchTypes.SET_ERROR, payload: error });
       } finally {
         dispatch({ type: DispatchTypes.SET_LOADING, payload: false });
       }
     };
-    loadUser();
-  }, []);
+    if (authUser) {
+      if (!user) {
+        loadUser();
+      }
+    } else {
+      if (user) {
+        dispatch({ type: DispatchTypes.RESET });
+      }
+    }
+  }, [authUser, user]);
 
   const providerValue = useMemo(() => {
     /**

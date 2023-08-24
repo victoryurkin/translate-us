@@ -10,6 +10,11 @@ import {
 import { authService } from '@translate-us/services';
 import auth from '@react-native-firebase/auth';
 
+export interface AuthUser {
+  uid: string;
+  email: string;
+}
+
 export enum AuthErrorCodes {
   USER_NOT_FOUND = 'auth/user-not-found',
   WRONG_PASSWORD = 'auth/wrong-password',
@@ -30,7 +35,7 @@ export interface AuthError {
 export interface AuthState {
   isLoading: boolean;
   error?: Error;
-  authUser?: unknown;
+  authUser?: AuthUser;
   accessToken?: string;
   signIn: (username: string, password: string) => Promise<void>;
   signUp: (username: string, password: string) => Promise<void>;
@@ -83,7 +88,7 @@ const reducer = (state: AuthState, { type, payload }: DispatchProps) => {
     case DispatchTypes.SET_AUTH_USER:
       return {
         ...state,
-        authUser: payload,
+        authUser: payload as AuthUser,
       };
     case DispatchTypes.SET_ACCESS_TOKEN:
       return {

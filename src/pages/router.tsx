@@ -55,7 +55,7 @@ export const Router = () => {
         </NavigationContainer>
       )}
       {/* {!__DEV__ && <Subscriptions />} */}
-      <Subscriptions />
+      {authUser && <Subscriptions />}
     </React.Fragment>
   );
 };

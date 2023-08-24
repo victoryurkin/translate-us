@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { PurchasesOfferings, PurchasesPackage } from 'react-native-purchases';
 import { colors, fontSize, spacing } from '@translate-us/styles';
 import { Button } from './button';
 import { Link } from './link';
@@ -11,14 +12,14 @@ const screenDimensions = Dimensions.get('screen');
 
 interface Props {
   isLoading: boolean;
-  onSubscriptionPurchase: (productId: string) => void;
-  onProductPurchase: (productId: string) => void;
+  offerings: PurchasesOfferings;
+  onPurchase: (pcgk: PurchasesPackage) => Promise<void>;
 }
 
 export const Content: React.FC<Props> = ({
   isLoading,
-  onSubscriptionPurchase,
-  onProductPurchase,
+  offerings,
+  onPurchase,
 }) => {
   const [legalContent, setLegalContent] = React.useState<'privacy' | 'terms'>();
   const translateAnim = React.useRef(new Animated.Value(0)).current;
@@ -57,7 +58,22 @@ export const Content: React.FC<Props> = ({
           </LinearGradient>
 
           <View style={styles.buttonsContainer}>
-            <View style={styles.topButtons}>
+            {offerings.current?.availablePackages.map((item, index) => {
+              return (
+                <Button
+                  key={index}
+                  icon={require('../../../assets/images/sub-month.png')}
+                  title={`$${item.product.price}`}
+                  subtitle={
+                    item.product.discounts && item.product.discounts[0]
+                      ? `${item.product.discounts[0].periodNumberOfUnits} days free, then`
+                      : ''
+                  }
+                  onPress={() => onPurchase(item)}
+                />
+              );
+            })}
+            {/* <View style={styles.topButtons}>
               <Button
                 icon={require('../../../assets/images/sub-month.png')}
                 title="$9.99/month"
@@ -78,7 +94,7 @@ export const Content: React.FC<Props> = ({
                 subtitle="pay as you need"
                 onPress={() => onProductPurchase('prodDay')}
               />
-            </View>
+            </View> */}
           </View>
 
           <View style={styles.linksContainer}>
