@@ -14,12 +14,14 @@ interface Props {
   isLoading: boolean;
   offerings: PurchasesOfferings;
   onPurchase: (pcgk: PurchasesPackage) => Promise<void>;
+  onRestore: () => Promise<void>;
 }
 
 export const Content: React.FC<Props> = ({
   isLoading,
   offerings,
   onPurchase,
+  onRestore,
 }) => {
   const [legalContent, setLegalContent] = React.useState<'privacy' | 'terms'>();
   const translateAnim = React.useRef(new Animated.Value(0)).current;
@@ -53,56 +55,52 @@ export const Content: React.FC<Props> = ({
           <LinearGradient
             colors={[colors.primary[700], colors.primary[500]]}
             style={styles.topBar}>
-            <Text style={styles.header}>Translate Us - Full Access</Text>
-            <Text style={styles.subheader}>Start 3-Day Free Trial</Text>
+            <Text style={styles.header}>Translate Us</Text>
+            <Text style={styles.subheader}>application full access</Text>
           </LinearGradient>
 
+          <Text style={styles.subscriptionsTitle}>Start 3-Day Free Trial</Text>
+          <Text style={styles.subscriptionsSubtitle}>
+            with renewable subscription plans
+          </Text>
           <View style={styles.buttonsContainer}>
-            {offerings.current?.availablePackages.map((item, index) => {
-              return (
-                <Button
-                  key={index}
-                  icon={require('../../../assets/images/sub-month.png')}
-                  title={`$${item.product.price}`}
-                  subtitle={
-                    item.product.discounts && item.product.discounts[0]
-                      ? `${item.product.discounts[0].periodNumberOfUnits} days free, then`
-                      : ''
-                  }
-                  onPress={() => onPurchase(item)}
-                />
-              );
-            })}
-            {/* <View style={styles.topButtons}>
-              <Button
-                icon={require('../../../assets/images/sub-month.png')}
-                title="$9.99/month"
-                subtitle="3 days free, then"
-                onPress={() => onSubscriptionPurchase('subMonth')}
-              />
-              <Button
-                icon={require('../../../assets/images/sub-year.png')}
-                title="$59.99/year"
-                subtitle="3 days free, then"
-                onPress={() => onSubscriptionPurchase('subYear')}
-              />
-            </View>
-            <View style={styles.bottomButtons}>
-              <Button
-                icon={require('../../../assets/images/on-demand.png')}
-                title="$0.99 for one day access"
-                subtitle="pay as you need"
-                onPress={() => onProductPurchase('prodDay')}
-              />
-            </View> */}
+            {offerings.current?.availablePackages
+              .filter(item => item.product.productCategory === 'SUBSCRIPTION')
+              .map((item, index) => {
+                return (
+                  <Button
+                    key={index}
+                    purchasePackage={item}
+                    onPress={() => onPurchase(item)}
+                  />
+                );
+              })}
+          </View>
+
+          <Text style={styles.subscriptionsTitle}>or Pay as You Need</Text>
+          <Text style={styles.subscriptionsSubtitle}>
+            on-demand access (not renewable)
+          </Text>
+          <View style={styles.buttonsContainer}>
+            {offerings.current?.availablePackages
+              .filter(item => item.product.productCategory !== 'SUBSCRIPTION')
+              .map((item, index) => {
+                return (
+                  <Button
+                    key={index}
+                    purchasePackage={item}
+                    onPress={() => onPurchase(item)}
+                  />
+                );
+              })}
           </View>
 
           <View style={styles.linksContainer}>
             <Link
               title="Restore"
-              size={fontSize.lg}
+              size={fontSize.md}
               color={colors.primary[600]}
-              onPress={() => console.log('!!!')}
+              onPress={onRestore}
             />
             <View style={styles.bottomLinksContainer}>
               <Link
@@ -129,9 +127,6 @@ export const Content: React.FC<Props> = ({
           <View style={styles.descriptionContainer}>
             <Text style={styles.description}>
               Monthly or yearly recurring billing, can be canceled anytime
-            </Text>
-            <Text style={styles.description}>
-              No recurring billing, if you purchase one day access.
             </Text>
           </View>
         </View>
@@ -177,17 +172,16 @@ const styles = StyleSheet.create({
   topBar: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing['2xl'],
-    height: 160,
   },
   header: {
     fontSize: fontSize.h2,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
   subheader: {
-    fontSize: fontSize.lg,
+    fontSize: fontSize.md,
     fontWeight: '500',
     color: 'white',
     textAlign: 'center',
@@ -210,8 +204,23 @@ const styles = StyleSheet.create({
   },
 
   linksContainer: {
-    paddingTop: spacing.mega,
+    paddingTop: spacing.xl,
   },
+
+  subscriptionsTitle: {
+    fontSize: fontSize.lg,
+    marginHorizontal: spacing['2xl'],
+    marginBottom: spacing.xs,
+    marginTop: spacing.xl,
+    textAlign: 'center',
+    color: colors.primary[700],
+  },
+  subscriptionsSubtitle: {
+    marginHorizontal: spacing['2xl'],
+    textAlign: 'center',
+    marginBottom: spacing['2xl'],
+  },
+
   bottomLinksContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -224,7 +233,6 @@ const styles = StyleSheet.create({
   },
 
   descriptionContainer: {
-    backgroundColor: colors.secondary[200],
     display: 'flex',
     flexDirection: 'row',
     marginHorizontal: spacing['2xl'],

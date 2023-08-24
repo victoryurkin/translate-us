@@ -47,5 +47,6 @@
     "default_target": "Default translate to:",
     "default_voice": "Default Voice",
     "male_female": "Male/Female"
-  }
+  },
+  "price": "{{val, currency(USD)}}"
 }

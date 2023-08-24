@@ -78,6 +78,17 @@ export const Subscriptions: React.FC = () => {
     }
   };
 
+  const handleRestore = async () => {
+    try {
+      setLoading(true);
+      await Purchases.restorePurchases();
+    } catch (error) {
+      console.log('Error restoring purchase: ', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen}>
       {offerings && (
@@ -85,6 +96,7 @@ export const Subscriptions: React.FC = () => {
           isLoading={isLoading}
           offerings={offerings}
           onPurchase={handlePurchase}
+          onRestore={handleRestore}
         />
       )}
     </Modal>

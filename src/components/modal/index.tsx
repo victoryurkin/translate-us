@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import { Animated, ScrollView, StyleSheet, Dimensions } from 'react-native';
-import { colors } from '@translate-us/styles';
 
 const screenDimensions = Dimensions.get('screen');
 
@@ -10,7 +9,6 @@ interface ModalProps extends React.PropsWithChildren {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
-  const [isPresented, setPresented] = React.useState(isOpen);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const translateAnim = React.useRef(
     new Animated.Value(screenDimensions.height - 80),
@@ -66,32 +64,18 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setTimeout(() => {
-        setPresented(false);
-      }, 300);
-    } else {
-      setPresented(true);
-    }
-  }, [isOpen]);
-
   return (
     <React.Fragment>
-      {isPresented && (
-        <React.Fragment>
-          <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
-          <Animated.View
-            style={[
-              styles.modal,
-              {
-                transform: [{ translateY: translateAnim }],
-              },
-            ]}>
-            <ScrollView style={styles.content}>{children}</ScrollView>
-          </Animated.View>
-        </React.Fragment>
-      )}
+      <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
+      <Animated.View
+        style={[
+          styles.modal,
+          {
+            transform: [{ translateY: translateAnim }],
+          },
+        ]}>
+        <ScrollView style={styles.content}>{children}</ScrollView>
+      </Animated.View>
     </React.Fragment>
   );
 };
@@ -121,6 +105,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: colors.secondary[200],
+    backgroundColor: 'white',
   },
 });
