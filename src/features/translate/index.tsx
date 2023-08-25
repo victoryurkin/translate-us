@@ -17,7 +17,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
 
 export const Translate: React.FC = () => {
-  const { isLoading, user } = useUser();
+  const { user, updateUser } = useUser();
   const { connect, disconnect, startRecording, stopRecording, job } =
     useStream();
 
@@ -26,28 +26,44 @@ export const Translate: React.FC = () => {
   const [isSettingsOpen, toggleSettings] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isLoading) {
-      if (user?.defaultSourceLanguage) {
-        setSourceLanguage(user.defaultSourceLanguage);
+    if (user) {
+      if (user.defaultSourceLanguage) {
+        setSourceLanguage(supportedLanguages[user.defaultSourceLanguage]);
       } else {
         setSourceLanguage(supportedLanguages['en-US']);
       }
-      if (user?.defaultTargetLanguage) {
-        setTargetLanguage(user.defaultTargetLanguage);
+      if (user.defaultTargetLanguage) {
+        setTargetLanguage(supportedLanguages[user.defaultTargetLanguage]);
       } else {
         setTargetLanguage(supportedLanguages['es-US']);
       }
     }
-  }, [isLoading]);
+  }, [user]);
 
   React.useEffect(() => {
-    if (!isLoading) {
+    if (user) {
       setTimeout(() => {
         connect();
       }, 100);
     }
     return disconnect();
-  }, [isLoading]);
+  }, [user]);
+
+  React.useEffect(() => {
+    if (sourceLanguage) {
+      updateUser(draft => {
+        draft.defaultSourceLanguage = sourceLanguage.code;
+      });
+    }
+  }, [sourceLanguage]);
+
+  React.useEffect(() => {
+    if (targetLanguage) {
+      updateUser(draft => {
+        draft.defaultTargetLanguage = targetLanguage.code;
+      });
+    }
+  }, [targetLanguage]);
 
   return (
     <Drawer

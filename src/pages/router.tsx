@@ -2,12 +2,23 @@ import React from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Auth, Subscriptions, Translate } from '@translate-us/features';
-import { useAuth } from '@translate-us/context';
+import { Auth, Translate } from '@translate-us/features';
+// import { Subscriptions } from '@translate-us/features';
+import { useAuth, UserProvider } from '@translate-us/context';
 import { Text } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const Stack = createNativeStackNavigator();
+
+const UserMiddleware = () => {
+  const { authUser } = useAuth();
+  const uid = React.useMemo(() => authUser!.uid, [authUser]);
+  return (
+    <UserProvider uid={uid}>
+      <Translate />
+    </UserProvider>
+  );
+};
 
 export const Router = () => {
   const { isLoading, authUser } = useAuth();
@@ -44,10 +55,11 @@ export const Router = () => {
                 options={{ headerShown: false }}
               />
             )}
+
             {!!authUser && (
               <Stack.Screen
                 name="Translate"
-                component={Translate}
+                component={UserMiddleware}
                 options={{ headerShown: false }}
               />
             )}
@@ -55,7 +67,7 @@ export const Router = () => {
         </NavigationContainer>
       )}
       {/* {!__DEV__ && <Subscriptions />} */}
-      {authUser && <Subscriptions />}
+      {/* {authUser && <Subscriptions />} */}
     </React.Fragment>
   );
 };

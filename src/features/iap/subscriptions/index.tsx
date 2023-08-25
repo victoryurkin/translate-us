@@ -36,7 +36,6 @@ export const Subscriptions: React.FC = () => {
     const loadCustomerInfo = async () => {
       try {
         const customerInfo = await Purchases.getCustomerInfo();
-        console.log('!!!!!!!!!!', JSON.stringify(customerInfo));
         if (!isActive(customerInfo.entitlements.active)) {
           toggleModal(true);
         } else {

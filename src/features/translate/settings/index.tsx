@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Language } from '@translate-us/constants';
+import {
+  Language,
+  supportedInterfaceLanguages,
+  defaultInterfaceLanguage,
+} from '@translate-us/constants';
 import { Button } from '@translate-us/components';
 import { useAuth, useUser } from '@translate-us/context';
 import { SettingsIcon } from './icon';
@@ -24,28 +28,19 @@ export const Settings: React.FC = () => {
       <View style={styles.icon}>
         <SettingsIcon width={180} height={180} fill={colors.primary[600]} />
       </View>
-      <Text style={styles.header}>{t('settings.default_languages')}</Text>
+      <Text style={styles.header}>{t('settings.ui_language_title')}</Text>
 
       <View style={formFieldStyles}>
-        <Text style={styles.label}>{t('settings.default_source')}</Text>
         <LanguageSelector
-          language={user?.defaultSourceLanguage}
+          languages={supportedInterfaceLanguages}
+          language={
+            user?.interfaceLanguage
+              ? supportedInterfaceLanguages[user?.interfaceLanguage]
+              : defaultInterfaceLanguage
+          }
           onChange={(lang: Language) => {
             updateUser(draft => {
-              draft.defaultSourceLanguage = lang;
-            });
-          }}
-          type="settings-source"
-        />
-      </View>
-
-      <View style={formFieldStyles}>
-        <Text style={styles.label}>{t('settings.default_target')}</Text>
-        <LanguageSelector
-          language={user?.defaultTargetLanguage}
-          onChange={(lang: Language) => {
-            updateUser(draft => {
-              draft.defaultTargetLanguage = lang;
+              draft.interfaceLanguage = lang.code;
             });
           }}
           type="settings-source"

@@ -1,4 +1,5 @@
-import {
+import auth from '@react-native-firebase/auth';
+import React, {
   createContext,
   FC,
   useReducer,
@@ -7,8 +8,8 @@ import {
   useMemo,
   useEffect,
 } from 'react';
-import { authService } from '@translate-us/services';
-import auth from '@react-native-firebase/auth';
+import { authService, userService } from '@translate-us/services';
+import { notifications, AppEvents } from '@translate-us/clients';
 
 export interface AuthUser {
   uid: string;
@@ -66,6 +67,7 @@ enum DispatchTypes {
   SET_LOADING,
   SET_AUTH_USER,
   SET_ACCESS_TOKEN,
+  SET_AUTH_USER_ACCESS_TOKEN,
 }
 
 interface DispatchProps {
@@ -94,6 +96,22 @@ const reducer = (state: AuthState, { type, payload }: DispatchProps) => {
       return {
         ...state,
         accessToken: payload as string,
+      };
+    case DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN:
+      return {
+        ...state,
+        authUser: (
+          payload as {
+            authUser: AuthUser;
+            accessToken: string;
+          }
+        ).authUser,
+        accessToken: (
+          payload as {
+            authUser: AuthUser;
+            accessToken: string;
+          }
+        ).accessToken,
       };
     default:
       return state;
@@ -131,23 +149,24 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (username: string, password: string) => {
     const userCredential = await authService.signUp(username, password);
     if (userCredential?.user) {
-      dispatch({
-        type: DispatchTypes.SET_AUTH_USER,
-        payload: userCredential.user,
-      });
       const accessToken = await userCredential.user.getIdToken();
-      if (accessToken) {
-        dispatch({
-          type: DispatchTypes.SET_ACCESS_TOKEN,
-          payload: accessToken,
-        });
-      }
+      await userService.createUser(
+        userCredential.user.uid,
+        userCredential.user.email || '',
+      );
+      dispatch({
+        type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
+        payload: {
+          authUser: userCredential.user,
+          accessToken: accessToken,
+        },
+      });
     }
   };
 
   const signOut = async () => {
     await authService.signOut();
-    // notifications.dispatch(Events.AUTH_SIGNOUT);
+    notifications.emit(AppEvents.AUTH_SIGN_OUT);
   };
 
   const resetPassword = async (email: string) => {
@@ -158,23 +177,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const subscriber = auth().onAuthStateChanged(async user => {
       try {
         if (user) {
-          dispatch({
-            type: DispatchTypes.SET_AUTH_USER,
-            payload: user,
-          });
           const accessToken = await user.getIdToken();
           dispatch({
-            type: DispatchTypes.SET_ACCESS_TOKEN,
-            payload: accessToken,
+            type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
+            payload: {
+              authUser: user,
+              accessToken: accessToken,
+            },
           });
         } else {
           dispatch({
-            type: DispatchTypes.SET_AUTH_USER,
-            payload: undefined,
-          });
-          dispatch({
-            type: DispatchTypes.SET_ACCESS_TOKEN,
-            payload: undefined,
+            type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
+            payload: {
+              authUser: undefined,
+              accessToken: undefined,
+            },
           });
         }
       } catch (error) {

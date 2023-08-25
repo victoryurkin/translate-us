@@ -10,16 +10,17 @@ import {
   Image,
 } from 'react-native';
 import { colors, spacing, border, fontSize } from '@translate-us/styles';
-import { supportedLanguages, Language } from '@translate-us/constants';
+import {
+  supportedLanguages,
+  Language,
+  SupportedLanguages,
+} from '@translate-us/constants';
 import { useTranslation } from '@translate-us/i18n';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { CheckIcon } from 'react-native-heroicons/outline';
 
-const languages = Object.keys(supportedLanguages).map(
-  key => supportedLanguages[key],
-);
-
 interface LanguageSelectorProps {
+  languages?: SupportedLanguages;
   language?: Language;
   onChange: (lang: Language) => void;
   type:
@@ -30,21 +31,28 @@ interface LanguageSelectorProps {
 }
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+  languages,
   language,
   onChange,
   type,
 }) => {
+  const langs = React.useMemo(() => {
+    return languages
+      ? Object.keys(languages).map(key => languages[key])
+      : Object.keys(supportedLanguages).map(key => supportedLanguages[key]);
+  }, [languages]);
+
   const [query, setQuery] = React.useState<string>('');
 
   const { t } = useTranslation();
 
   const filteredLanguages = React.useMemo(() => {
     if (query.trim() !== '') {
-      return languages.filter(lang => lang.name.includes(query));
+      return langs.filter(lang => lang.name.includes(query));
     } else {
-      return languages;
+      return langs;
     }
-  }, [query]);
+  }, [query, langs]);
 
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
   const snapPoints = React.useMemo(() => ['25%', '50%'], []);

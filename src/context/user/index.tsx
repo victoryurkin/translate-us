@@ -9,7 +9,8 @@ import React, {
 import { produce } from 'immer';
 import { User } from '@translate-us/models';
 import { userService } from '@translate-us/services';
-import { useAuth } from '@translate-us/context';
+import { notifications, AppEvents } from '@translate-us/clients';
+import firestore from '@react-native-firebase/firestore';
 
 /**
  * The User state property been injected to a component using withUser HOC.
@@ -76,38 +77,39 @@ const reducer = (state: UserState, { type, payload }: DispatchProps) => {
 };
 
 interface UserProviderProps {
+  uid: string;
   children: React.ReactNode;
 }
 
-export const UserProvider: FC<UserProviderProps> = ({ children }) => {
+export const UserProvider: FC<UserProviderProps> = ({ uid, children }) => {
   const [userState, dispatch] = useReducer(reducer, initialState);
   const { user } = userState;
 
-  const { authUser } = useAuth();
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('Users')
+      .doc(uid)
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot) {
+          dispatch({
+            type: DispatchTypes.SET_USER,
+            payload: documentSnapshot.data(),
+          });
+        }
+      });
+    return subscriber;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        dispatch({ type: DispatchTypes.SET_LOADING, payload: true });
-        const response = await userService.getUser(authUser!.uid);
-        dispatch({ type: DispatchTypes.SET_USER, payload: response });
-      } catch (error) {
-        console.log('^^', error);
-        dispatch({ type: DispatchTypes.SET_ERROR, payload: error });
-      } finally {
-        dispatch({ type: DispatchTypes.SET_LOADING, payload: false });
-      }
+    const signOutHandler = () => {
+      dispatch({ type: DispatchTypes.RESET, payload: {} });
     };
-    if (authUser) {
-      if (!user) {
-        loadUser();
-      }
-    } else {
-      if (user) {
-        dispatch({ type: DispatchTypes.RESET });
-      }
-    }
-  }, [authUser, user]);
+    notifications.addListener(AppEvents.AUTH_SIGN_OUT, signOutHandler);
+    return () => {
+      notifications.removeListener(AppEvents.AUTH_SIGN_OUT, signOutHandler);
+    };
+  }, []);
 
   const providerValue = useMemo(() => {
     /**
@@ -121,9 +123,9 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     const updateUser = async (mutationFn: (user: User) => void) => {
       const updatedUser = user ? produce(user, mutationFn) : undefined;
       if (updatedUser) {
-        const response = await userService.updateUser(updatedUser);
-        dispatch({ type: DispatchTypes.SET_USER, payload: response });
-        return response;
+        await userService.updateUser(updatedUser);
+        dispatch({ type: DispatchTypes.SET_USER, payload: updatedUser });
+        return updatedUser;
       }
       return user;
     };
@@ -141,26 +143,13 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   );
 };
 
-/**
- * HOC to provide a UserContext
- * @returns JSX.Element
- * @example export default compose(withUserProvider)(App);
- */
-export const withUserProvider = (Component: FC) => () => {
-  return (
-    <UserProvider>
-      <Component />
-    </UserProvider>
-  );
-};
-
 interface UserContextProps {
   userState: UserState;
 }
 
 /**
  * HOC to consume a User Context. Injects userState property into component's properties.
- * Use it with any component under the component level where withUserProvider was used.
+ * Use it with any component under the component level where UserProvider was used.
  * @returns JSX.Element
  * @example export default withUser(MyComponent);
  */
