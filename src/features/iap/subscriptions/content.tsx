@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Animated } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Animated,
+  ActivityIndicator,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { PurchasesOfferings, PurchasesPackage } from 'react-native-purchases';
 import { colors, fontSize, spacing } from '@translate-us/styles';
@@ -61,7 +68,7 @@ export const Content: React.FC<Props> = ({
 
           <Text style={styles.subscriptionsTitle}>Start 3-Day Free Trial</Text>
           <Text style={styles.subscriptionsSubtitle}>
-            with renewable subscription plans
+            with auto-renewable subscription plans
           </Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
@@ -79,7 +86,7 @@ export const Content: React.FC<Props> = ({
 
           <Text style={styles.subscriptionsTitle}>or Pay as You Need</Text>
           <Text style={styles.subscriptionsSubtitle}>
-            on-demand access (not renewable)
+            on-demand access (not auto-renewable)
           </Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
@@ -154,7 +161,11 @@ export const Content: React.FC<Props> = ({
           )}
         </View>
       </Animated.View>
-      {isLoading && <View style={styles.loaderContainer} />}
+      {isLoading && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={colors.secondary[400]} />
+        </View>
+      )}
     </React.Fragment>
   );
 };
@@ -255,7 +266,10 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: colors.secondary[200],
+    backgroundColor: 'white',
     opacity: 0.3,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

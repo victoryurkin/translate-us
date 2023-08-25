@@ -66,16 +66,20 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
 
   return (
     <React.Fragment>
-      <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
-      <Animated.View
-        style={[
-          styles.modal,
-          {
-            transform: [{ translateY: translateAnim }],
-          },
-        ]}>
-        <ScrollView style={styles.content}>{children}</ScrollView>
-      </Animated.View>
+      {isOpen && (
+        <React.Fragment>
+          <Animated.View style={[styles.background, { opacity: fadeAnim }]} />
+          <Animated.View
+            style={[
+              styles.modal,
+              {
+                transform: [{ translateY: translateAnim }],
+              },
+            ]}>
+            <ScrollView style={styles.content}>{children}</ScrollView>
+          </Animated.View>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

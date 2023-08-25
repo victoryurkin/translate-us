@@ -9,6 +9,7 @@ import Purchases, {
 import { Modal } from '@translate-us/components';
 import { useAuth } from '@translate-us/context';
 import { Content } from './content';
+import { isActive } from './utils';
 
 export const Subscriptions: React.FC = () => {
   const [isOpen, toggleModal] = React.useState(false);
@@ -35,8 +36,11 @@ export const Subscriptions: React.FC = () => {
     const loadCustomerInfo = async () => {
       try {
         const customerInfo = await Purchases.getCustomerInfo();
-        if (customerInfo.entitlements.active.appaccess === undefined) {
+        console.log('!!!!!!!!!!', JSON.stringify(customerInfo));
+        if (!isActive(customerInfo.entitlements.active)) {
           toggleModal(true);
+        } else {
+          toggleModal(false);
         }
       } catch (error) {
         console.log('Error loading RevenueCat customer info: ', error);
@@ -55,7 +59,7 @@ export const Subscriptions: React.FC = () => {
 
   React.useEffect(() => {
     const customerInfoUpdateHandler = (customerInfo: CustomerInfo) => {
-      if (customerInfo.entitlements.active.appaccess === undefined) {
+      if (!isActive(customerInfo.entitlements.active)) {
         toggleModal(true);
       } else {
         toggleModal(false);
