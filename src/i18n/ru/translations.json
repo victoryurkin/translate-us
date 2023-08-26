@@ -1,0 +1,48 @@
+{
+  "main": {
+    "title": "Translate Us",
+    "subtitle": "перевод речи"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Пароль",
+    "signin": "Войти",
+    "signup": "Зарегистрироваться",
+    "signout": "Выйти",
+    "forgot_password": "Забыли пароль?",
+    "confirm_password": "Подтвердите пароль",
+    "create_account": "Завести аккаунт",
+    "signin_account": "Иметь аккаунт? Войти",
+    "otp": "Введите одноразовый код",
+    "confirm_code": "Подтвердите код",
+    "otp_error": "Введите 6-значный код",
+    "resend_otp": "Повторно отправить OTP",
+    "passwords_dont_match": "Пароли не совпадают",
+    "password_error": "Минимум 6 символов, минимум 1 цифра и 1 заглавная буква.",
+    "errors": {
+      "email_password_not_found": "Адрес электронной почты или пароль не найдены",
+      "email_not_found": "Адрес электронной почты не найден",
+      "email_already_used": "Адрес электронной почты уже существует",
+      "email_max_length": "Электронная почта должна содержать не более 50 символов.",
+      "email_invalid": "Адрес электронной почты недействителен",
+      "email_required": "Введите ваш адрес электронной почты",
+      "password_required": "Введите ваш пароль",
+      "password_max_length": "Пароль должен содержать не более 50 символов.",
+      "password_invalid": "Минимум 6 символов, одна заглавная буква, одна цифра.",
+      "confirm_password_required": "Подтвердите ваш пароль"
+    },
+    "reset_success_title": "Письмо отправлено",
+    "reset_success_subtitle": "следуйте инструкциям в электронном письме",
+    "reset": "Перезагрузить"
+  },
+  "generic_error": "Что-то пошло не так. Пожалуйста, повторите попытку позже.",
+  "translate": {
+    "swipe": "проведите пальцем по экрану",
+    "hold": "держать",
+    "search": "Поиск..."
+  },
+  "settings": {
+    "ui_language_title": "Язык интерфейса"
+  },
+  "price": "{{val, currency(USD)}}"
+}

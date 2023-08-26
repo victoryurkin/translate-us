@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Language } from '@translate-us/constants';
 import {
-  Language,
   supportedInterfaceLanguages,
   defaultInterfaceLanguage,
-} from '@translate-us/constants';
+} from '@translate-us/i18n';
 import { Button } from '@translate-us/components';
 import { useAuth, useUser } from '@translate-us/context';
 import { SettingsIcon } from './icon';
@@ -15,7 +15,7 @@ import {
   formFieldStyles,
   spacing,
 } from '@translate-us/styles';
-import { useTranslation } from '@translate-us/i18n';
+import { useTranslation, changeLanguage } from '@translate-us/i18n';
 import { LanguageSelector } from '../components';
 
 export const Settings: React.FC = () => {
@@ -42,6 +42,7 @@ export const Settings: React.FC = () => {
             updateUser(draft => {
               draft.interfaceLanguage = lang.code;
             });
+            changeLanguage(lang.code.substring(0, 2));
           }}
           type="settings-source"
         />

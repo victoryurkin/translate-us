@@ -21,20 +21,6 @@ const it = require('@translate-us/assets/flags/it.png');
 const pt = require('@translate-us/assets/flags/pt.png');
 const es = require('@translate-us/assets/flags/es.png');
 
-export const supportedInterfaceLanguages: SupportedLanguages = {
-  'en-US': {
-    code: 'en-US',
-    name: 'English (United States)',
-    image: require('@translate-us/assets/flags/us.png'),
-  },
-};
-
-export const defaultInterfaceLanguage: Language = {
-  code: 'en-US',
-  name: 'English (United States)',
-  image: require('@translate-us/assets/flags/us.png'),
-};
-
 export const supportedLanguages: SupportedLanguages = {
   'af-ZA': {
     code: 'af-ZA',

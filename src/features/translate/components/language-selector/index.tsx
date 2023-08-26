@@ -15,12 +15,15 @@ import {
   Language,
   SupportedLanguages,
 } from '@translate-us/constants';
-import { useTranslation } from '@translate-us/i18n';
+import {
+  useTranslation,
+  SupportedLanguages as i18nSupportedLanguages,
+} from '@translate-us/i18n';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { CheckIcon } from 'react-native-heroicons/outline';
 
 interface LanguageSelectorProps {
-  languages?: SupportedLanguages;
+  languages?: SupportedLanguages | i18nSupportedLanguages;
   language?: Language;
   onChange: (lang: Language) => void;
   type:

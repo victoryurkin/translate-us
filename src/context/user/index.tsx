@@ -10,6 +10,7 @@ import { produce } from 'immer';
 import { User } from '@translate-us/models';
 import { userService } from '@translate-us/services';
 import { notifications, AppEvents } from '@translate-us/clients';
+import { changeLanguage } from '@translate-us/i18n';
 import firestore from '@react-native-firebase/firestore';
 
 /**
@@ -100,6 +101,12 @@ export const UserProvider: FC<UserProviderProps> = ({ uid, children }) => {
     return subscriber;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (user?.interfaceLanguage) {
+      changeLanguage(user.interfaceLanguage.substring(0, 2));
+    }
+  }, [user?.interfaceLanguage]);
 
   useEffect(() => {
     const signOutHandler = () => {

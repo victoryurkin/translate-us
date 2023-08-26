@@ -3,7 +3,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth, Translate } from '@translate-us/features';
-// import { Subscriptions } from '@translate-us/features';
+import { Subscriptions } from '@translate-us/features';
 import { useAuth, UserProvider } from '@translate-us/context';
 import { Text } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -67,7 +67,7 @@ export const Router = () => {
         </NavigationContainer>
       )}
       {/* {!__DEV__ && <Subscriptions />} */}
-      {/* {authUser && <Subscriptions />} */}
+      {!!authUser && <Subscriptions />}
     </React.Fragment>
   );
 };
