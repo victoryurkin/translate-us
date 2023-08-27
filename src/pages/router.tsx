@@ -1,17 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth, Translate } from '@translate-us/features';
 import { Subscriptions } from '@translate-us/features';
-import { useAuth, UserProvider, useUser } from '@translate-us/context';
-import { Text } from 'react-native';
+import { useAuth, UserProvider, useUser, useApp } from '@translate-us/context';
+import { uidNoIap } from '@translate-us/constants';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const Stack = createNativeStackNavigator();
 
 const TranslateMiddleware = () => {
-  const { user } = useUser();
+  const { isLoading, user } = useUser();
+  const { setLoading } = useApp();
+
+  React.useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
   return <React.Fragment>{user && <Translate />}</React.Fragment>;
 };
 
@@ -27,6 +34,7 @@ const UserMiddleware = () => {
 
 export const Router = () => {
   const { isLoading, authUser } = useAuth();
+  const { setLoading } = useApp();
 
   React.useEffect(() => {
     SplashScreen.hide();
@@ -46,10 +54,12 @@ export const Router = () => {
     });
   }, []);
 
+  React.useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
   return (
     <React.Fragment>
-      {/* {isLoading && <MoonLoader color="blue" />} */}
-      {isLoading && <Text>Loading...</Text>}
       {!isLoading && (
         <NavigationContainer>
           <Stack.Navigator initialRouteName={authUser ? 'Translate' : 'Auth'}>
@@ -71,8 +81,9 @@ export const Router = () => {
           </Stack.Navigator>
         </NavigationContainer>
       )}
-      {/* {!__DEV__ && <Subscriptions />} */}
-      {!!authUser && <Subscriptions />}
+      {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
+        <Subscriptions />
+      )}
     </React.Fragment>
   );
 };

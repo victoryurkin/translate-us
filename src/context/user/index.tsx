@@ -60,6 +60,7 @@ const reducer = (state: UserState, { type, payload }: DispatchProps) => {
     case DispatchTypes.SET_USER:
       return {
         ...state,
+        isLoading: false,
         user: payload as User,
       };
     case DispatchTypes.SET_ERROR:

@@ -1,2 +1,2 @@
 export * from './translate';
-export * from './iap';
+export * from './auth';
