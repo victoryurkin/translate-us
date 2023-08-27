@@ -26,28 +26,24 @@ export const Translate: React.FC = () => {
   const [isSettingsOpen, toggleSettings] = React.useState(false);
 
   React.useEffect(() => {
-    if (user) {
-      if (user.defaultSourceLanguage) {
-        setSourceLanguage(supportedLanguages[user.defaultSourceLanguage]);
-      } else {
-        setSourceLanguage(supportedLanguages['en-US']);
-      }
-      if (user.defaultTargetLanguage) {
-        setTargetLanguage(supportedLanguages[user.defaultTargetLanguage]);
-      } else {
-        setTargetLanguage(supportedLanguages['es-US']);
-      }
+    if (user!.defaultSourceLanguage) {
+      setSourceLanguage(supportedLanguages[user!.defaultSourceLanguage]);
+    } else {
+      setSourceLanguage(supportedLanguages['en-US']);
     }
-  }, [user]);
+    if (user!.defaultTargetLanguage) {
+      setTargetLanguage(supportedLanguages[user!.defaultTargetLanguage]);
+    } else {
+      setTargetLanguage(supportedLanguages['es-US']);
+    }
+  }, [user!.defaultSourceLanguage, user!.defaultTargetLanguage]);
 
   React.useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        connect();
-      }, 100);
-    }
+    setTimeout(() => {
+      connect();
+    }, 100);
     return disconnect();
-  }, [user]);
+  }, []);
 
   React.useEffect(() => {
     if (sourceLanguage) {
@@ -95,7 +91,7 @@ export const Translate: React.FC = () => {
             </View>
             <View style={styles.contentTopContainer}>
               <ScrollView contentContainerStyle={styles.content}>
-                <Text>
+                <Text style={styles.translationText}>
                   {job?.sourceCode === sourceLanguage?.code &&
                     job?.transcription}
                   {job?.targetCode === sourceLanguage?.code && (
@@ -130,7 +126,7 @@ export const Translate: React.FC = () => {
             </View>
             <View style={styles.contentBottomContainer}>
               <ScrollView contentContainerStyle={styles.content}>
-                <Text>
+                <Text style={styles.translationText}>
                   {job?.sourceCode === targetLanguage?.code &&
                     job?.transcription}
                   {job?.targetCode === targetLanguage?.code && (
@@ -206,6 +202,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  translationText: {
+    paddingHorizontal: spacing['2xl'],
+    textAlign: 'center',
+    fontSize: fontSize.md,
   },
   shadowContainer: {
     width: 80,

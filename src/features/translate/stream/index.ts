@@ -33,17 +33,10 @@ interface Job {
   audioOutput: string;
 }
 
-const floatTo16BitPCM = (input: Float32Array, output: Int16Array) => {
-  for (let i = 0; i < input.length; i++) {
-    const s = Math.max(-1, Math.min(1, input[i]));
-    output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-  }
-};
-
 MicrophoneStream.init({
-  sampleRate: 44100,
+  sampleRate: 16000,
   channels: 1,
-  bitsPerSample: 32,
+  bitsPerSample: 16,
   bufferSize: 4096,
   wavFile: `${DocumentDirectoryPath}/audio.wav`,
 });
@@ -67,10 +60,18 @@ export const useStream = () => {
       },
     );
 
-    socketRef.current.on('disconnect', () => {
-      // socketRef.current?.removeAllListeners();
-      socketRef.current?.connect();
-    });
+    // socketRef.current.on('disconnect', () => {
+    //   // if (socketRef.current) {
+    //   //   socketRef.current.connect();
+    //   // } else {
+    //   //   socketRef.current = io('http://localhost:8000', {
+    //   //     reconnectionDelayMax: 500,
+    //   //     auth: {
+    //   //       token: accessToken,
+    //   //     },
+    //   //   });
+    //   // }
+    // });
 
     socketRef.current.on(IncomingEvents.TRANSCRIPTION_DATA, (data: string) => {
       try {
@@ -148,6 +149,7 @@ export const useStream = () => {
 
   const disconnect = useCallback(() => {
     socketRef.current?.disconnect();
+    socketRef.current?.removeAllListeners();
   }, []);
 
   /***
@@ -156,6 +158,7 @@ export const useStream = () => {
 
   const startRecording = useCallback(
     async (sourceLanguage: string, targetLanguage: string) => {
+      console.log('!!!', socketRef.current?.active);
       if (!socketRef.current) {
         return;
       }
@@ -183,6 +186,7 @@ export const useStream = () => {
       // Start microphone stream
       MicrophoneStream.start();
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [connect],
   );
 
@@ -190,13 +194,7 @@ export const useStream = () => {
     if (isRecording.current === true) {
       try {
         const chunk = Buffer.from(data, 'base64');
-        const raw = new Float32Array(chunk.buffer);
-        if (raw == null) {
-          return;
-        }
-        const int16Array = new Int16Array(raw.length);
-        floatTo16BitPCM(raw, int16Array);
-        socketRef.current?.emit(OutgoingEvents.AUDIO_DATA, int16Array);
+        socketRef.current?.emit(OutgoingEvents.AUDIO_DATA, chunk);
       } catch (err) {
         console.log('Error converting microphone stream: ', err);
       }
