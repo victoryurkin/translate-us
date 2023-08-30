@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { AppState } from 'react-native';
 import MicrophoneStream from 'react-native-live-audio-stream';
-import { useAuth } from '@translate-us/context';
+import { useAuth, useApp } from '@translate-us/context';
 import { io, Socket } from 'socket.io-client';
 import { Buffer } from 'buffer';
 import { produce } from 'immer';
@@ -47,23 +47,11 @@ const apiUrl = 'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app';
 
 export const useStream = () => {
   const { accessToken } = useAuth();
+  const { setLoading } = useApp();
   const [job, setJob] = useState<Job>();
   const jobRef = useRef<Job>();
   const socketRef = useRef<Socket>();
   const isRecording = useRef(false);
-
-  useEffect(() => {
-    AppState.addEventListener('change', async newAppState => {
-      if (newAppState === 'active') {
-        if (!socketRef.current?.connected) {
-          disconnect();
-          await waitServerResponse();
-          connect();
-        }
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const connect = useCallback(async () => {
     // try {
@@ -79,9 +67,14 @@ export const useStream = () => {
       },
     });
 
-    // socketRef.current.on('disconnect', reason => {
-    //   console.log('!!!', reason);
+    // socketRef.current.on('connect', () => {
+    //   console.log('!!! connected !!!');
     // });
+
+    // socketRef.current.on('disconnect', reason => {
+    //   console.log('!!! disconnected: ', reason);
+    // });
+
     // socketRef.current.on('disconnect', () => {
     //   // if (socketRef.current) {
     //   //   socketRef.current.connect();
@@ -206,6 +199,19 @@ export const useStream = () => {
         return;
       }
 
+      // console.log('Start recording');
+      // console.log(
+      //   'Connection status: ',
+      //   socketRef.current?.active,
+      //   socketRef.current?.connected,
+      // );
+
+      // if (!socketRef.current?.connected) {
+      //   disconnect();
+      //   await waitServerResponse();
+      //   socketRef.current.connect();
+      // }
+
       isRecording.current = true;
       socketRef.current.emit(OutgoingEvents.START_RECORDING, {
         sourceLanguage,
@@ -229,8 +235,8 @@ export const useStream = () => {
       // Start microphone stream
       MicrophoneStream.start();
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [connect],
+
+    [],
   );
 
   MicrophoneStream.on('data', data => {
@@ -264,6 +270,28 @@ export const useStream = () => {
         }
       }, 1000);
     }
+  }, []);
+
+  useEffect(() => {
+    const stateChangeHandler = async (newAppState: string) => {
+      if (newAppState === 'active') {
+        if (socketRef.current && !socketRef.current.connected) {
+          setLoading(true);
+          await waitServerResponse();
+          setLoading(false);
+          socketRef.current.connect();
+        }
+      }
+    };
+
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      stateChangeHandler,
+    );
+    return () => {
+      appStateSubscription.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
