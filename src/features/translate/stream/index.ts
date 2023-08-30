@@ -41,6 +41,9 @@ MicrophoneStream.init({
   wavFile: `${DocumentDirectoryPath}/audio.wav`,
 });
 
+// https://translate-stream-service-ocrtlpqp4q-uk.a.run.app
+const apiUrl = 'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app';
+
 export const useStream = () => {
   const { accessToken } = useAuth();
   const [job, setJob] = useState<Job>();
@@ -48,18 +51,23 @@ export const useStream = () => {
   const socketRef = useRef<Socket>();
   const isRecording = useRef(false);
 
-  // https://translate-stream-service-ocrtlpqp4q-uk.a.run.app
-  const connect = useCallback(() => {
-    socketRef.current = io(
-      'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app',
-      {
-        reconnectionDelayMax: 500,
-        auth: {
-          token: accessToken,
-        },
-      },
-    );
+  const connect = useCallback(async () => {
+    // try {
+    //   await fetch(apiUrl);
+    // } catch (error) {
+    //   console.log('Error connecting to the server: ', error);
+    // }
 
+    socketRef.current = io(apiUrl, {
+      reconnectionDelayMax: 500,
+      auth: {
+        token: accessToken,
+      },
+    });
+
+    // socketRef.current.on('disconnect', reason => {
+    //   console.log('!!!', reason);
+    // });
     // socketRef.current.on('disconnect', () => {
     //   // if (socketRef.current) {
     //   //   socketRef.current.connect();
@@ -147,20 +155,47 @@ export const useStream = () => {
     });
   }, [accessToken]);
 
+  const waitServerResponse = useCallback(async () => {
+    try {
+      await fetch(`${apiUrl}/healthcheck`);
+    } catch (error) {
+      console.error('Error checking server status: ', error);
+    }
+  }, []);
+
   const disconnect = useCallback(() => {
     socketRef.current?.disconnect();
     socketRef.current?.removeAllListeners();
+    socketRef.current = undefined;
   }, []);
 
   /***
    * OUTGOING EVENTS
    ***/
 
+  // const reconnect = (): Promise<void> =>
+  //   new Promise(resolve => {
+  //     try {
+  //       disconnect();
+  //       connect();
+  //       setTimeout(() => {
+  //         resolve();
+  //       }, 300);
+  //     } catch (error) {
+  //       console.log('Error reconnecting');
+  //     }
+  //   });
+
   const startRecording = useCallback(
     async (sourceLanguage: string, targetLanguage: string) => {
-      console.log('!!!', socketRef.current?.active);
       if (!socketRef.current) {
         return;
+      }
+
+      // console.log('Is active connection: ', socketRef.current.connected);
+      if (!socketRef.current.connected) {
+        await waitServerResponse();
+        socketRef.current.connect();
       }
 
       isRecording.current = true;
@@ -228,6 +263,7 @@ export const useStream = () => {
     disconnect,
     startRecording,
     stopRecording,
+    waitServerResponse,
     job,
   };
 };

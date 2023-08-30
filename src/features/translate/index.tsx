@@ -18,8 +18,14 @@ import { useStream } from './stream';
 
 export const Translate: React.FC = () => {
   const { user, updateUser } = useUser();
-  const { connect, disconnect, startRecording, stopRecording, job } =
-    useStream();
+  const {
+    connect,
+    disconnect,
+    startRecording,
+    stopRecording,
+    waitServerResponse,
+    job,
+  } = useStream();
 
   const [sourceLanguage, setSourceLanguage] = React.useState<Language>();
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
@@ -39,9 +45,11 @@ export const Translate: React.FC = () => {
   }, [user!.defaultSourceLanguage, user!.defaultTargetLanguage]);
 
   React.useEffect(() => {
-    setTimeout(() => {
+    const loadConnection = async () => {
+      await waitServerResponse();
       connect();
-    }, 100);
+    };
+    loadConnection();
     return disconnect();
   }, []);
 
