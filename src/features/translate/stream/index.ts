@@ -1,4 +1,5 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { AppState } from 'react-native';
 import MicrophoneStream from 'react-native-live-audio-stream';
 import { useAuth } from '@translate-us/context';
 import { io, Socket } from 'socket.io-client';
@@ -50,6 +51,19 @@ export const useStream = () => {
   const jobRef = useRef<Job>();
   const socketRef = useRef<Socket>();
   const isRecording = useRef(false);
+
+  useEffect(() => {
+    AppState.addEventListener('change', async newAppState => {
+      if (newAppState === 'active') {
+        if (!socketRef.current?.connected) {
+          disconnect();
+          await waitServerResponse();
+          connect();
+        }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const connect = useCallback(async () => {
     // try {
@@ -190,12 +204,6 @@ export const useStream = () => {
     async (sourceLanguage: string, targetLanguage: string) => {
       if (!socketRef.current) {
         return;
-      }
-
-      // console.log('Is active connection: ', socketRef.current.connected);
-      if (!socketRef.current.connected) {
-        await waitServerResponse();
-        socketRef.current.connect();
       }
 
       isRecording.current = true;
