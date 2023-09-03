@@ -1,36 +1,44 @@
-import React from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import React, { FC } from 'react';
+import { StyleSheet, Pressable, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { ChevronLeftIcon } from 'react-native-heroicons/solid';
+import { XMarkIcon } from 'react-native-heroicons/solid';
+import {
+  Modal,
+  TermsOfUse as TermsOfUseComponent,
+} from '@translate-us/components';
 import { colors, fontSize, spacing } from '@translate-us/styles';
-import { PrivacyPolicy as PrivacyPolicyComponent } from '@translate-us/components';
+import { useTranslation } from '@translate-us/i18n';
 
-interface Props {
-  onBack: () => void;
+interface TermsOfUseProps {
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const PrivacyPolicy: React.FC<Props> = ({ onBack }) => {
+export const TermsOfUse: FC<TermsOfUseProps> = ({ isOpen, onClose }) => {
   const [isPressed, setPressed] = React.useState(false);
 
+  const { t } = useTranslation();
+
   return (
-    <View>
+    <Modal isOpen={isOpen}>
       <LinearGradient
         colors={[colors.primary[700], colors.primary[500]]}
         style={styles.topBar}>
+        <Text style={styles.header}>{t('terms_of_use.title')}</Text>
         <Pressable
           style={[
-            styles.backButton,
+            styles.closeButton,
             isPressed ? styles.backButtonPressed : styles.backButtonDefault,
           ]}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
-          onPress={onBack}>
-          <ChevronLeftIcon color="white" />
+          onPress={onClose}>
+          <XMarkIcon color="white" />
         </Pressable>
-        <Text style={styles.header}>Privacy Policy</Text>
       </LinearGradient>
-      <PrivacyPolicyComponent />
-    </View>
+
+      <TermsOfUseComponent />
+    </Modal>
   );
 };
 
@@ -42,11 +50,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  backButton: {
+  closeButton: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
     position: 'absolute',
     zIndex: 10,
+    right: 0,
   },
   backButtonDefault: {
     opacity: 1,

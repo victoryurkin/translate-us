@@ -42,7 +42,24 @@
     "search": "Search..."
   },
   "settings": {
-    "ui_language_title": "Interface Language"
+    "ui_language_title": "Interface Language",
+    "account_management": "Account Management",
+    "close_account": "Close Account",
+    "close_account_confirm_dialog": {
+      "title": "Delete Account",
+      "description": "Are you sure? You want to delete your account and sign out?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "close": "Close",
+      "error_title": "Something went wrong",
+      "error_description": "Please, try again later"
+    }
   },
-  "price": "{{val, currency(USD)}}"
+  "price": "{{val, currency(USD)}}",
+  "privacy_policy": {
+    "title": "Privacy Policy"
+  },
+  "terms_of_use": {
+    "title": "Terms Of Use"
+  }
 }

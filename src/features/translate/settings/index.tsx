@@ -1,12 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Language } from '@translate-us/constants';
-import {
-  supportedInterfaceLanguages,
-  defaultInterfaceLanguage,
-} from '@translate-us/i18n';
-import { Button } from '@translate-us/components';
-import { useAuth, useUser } from '@translate-us/context';
+import React, { FC } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Button, Link } from '@translate-us/components';
+import { useAuth, useUser, useApp } from '@translate-us/context';
 import { SettingsIcon } from './icon';
 import {
   border,
@@ -15,37 +10,90 @@ import {
   formFieldStyles,
   spacing,
 } from '@translate-us/styles';
-import { useTranslation, changeLanguage } from '@translate-us/i18n';
-import { LanguageSelector } from '../components';
+import { useTranslation } from '@translate-us/i18n';
 
-export const Settings: React.FC = () => {
+interface SettingsProps {
+  onPrivacy: () => void;
+  onTerms: () => void;
+}
+
+export const Settings: FC<SettingsProps> = ({ onPrivacy, onTerms }) => {
   const { t } = useTranslation();
   const { signOut } = useAuth();
-  const { user, updateUser } = useUser();
+  const { deleteUser } = useUser();
+  const { setLoading } = useApp();
+
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      await deleteUser();
+      signOut();
+    } catch (error) {
+      console.error('Error deleting account: ', error);
+      accountDeleteError();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmAccountDelete = () =>
+    Alert.alert(
+      t('settings.close_account_confirm_dialog.title'),
+      t('settings.close_account_confirm_dialog.description'),
+      [
+        {
+          text: t('settings.close_account_confirm_dialog.cancel'),
+          style: 'cancel',
+        },
+        {
+          text: t('settings.close_account_confirm_dialog.delete'),
+          onPress: deleteAccount,
+        },
+      ],
+    );
+
+  const accountDeleteError = () =>
+    Alert.alert(
+      t('settings.close_account_confirm_dialog.error_title'),
+      t('settings.close_account_confirm_dialog.error_description'),
+      [
+        {
+          text: t('settings.close_account_confirm_dialog.close'),
+          style: 'cancel',
+        },
+      ],
+    );
 
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
         <SettingsIcon width={180} height={180} fill={colors.primary[600]} />
       </View>
-      <Text style={styles.header}>{t('settings.ui_language_title')}</Text>
 
       <View style={formFieldStyles}>
-        <LanguageSelector
-          languages={supportedInterfaceLanguages}
-          language={
-            user?.interfaceLanguage
-              ? supportedInterfaceLanguages[user?.interfaceLanguage]
-              : defaultInterfaceLanguage
-          }
-          onChange={(lang: Language) => {
-            updateUser(draft => {
-              draft.interfaceLanguage = lang.code;
-            });
-            changeLanguage(lang.code.substring(0, 2));
-          }}
-          type="settings-source"
+        <Text style={styles.header}>{t('settings.account_management')}</Text>
+        <Button
+          title={t('settings.close_account')}
+          type="default"
+          block
+          styles={styles.closeButton}
+          onPress={confirmAccountDelete}
         />
+
+        <View style={styles.linksContainer}>
+          <Link
+            title={t('privacy_policy.title')}
+            size={fontSize.sm}
+            color={colors.primary[600]}
+            onPress={onPrivacy}
+          />
+          <Link
+            title={t('terms_of_use.title')}
+            size={fontSize.sm}
+            color={colors.primary[600]}
+            onPress={onTerms}
+          />
+        </View>
       </View>
 
       <View style={styles.signout}>
@@ -69,7 +117,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
   },
   header: {
-    fontSize: fontSize.h2,
+    fontSize: fontSize.lg,
     color: colors.primary[600],
     marginTop: spacing['4xl'],
     marginBottom: spacing.xl,
@@ -99,6 +147,16 @@ const styles = StyleSheet.create({
   selectedRowText: {
     flex: 1,
     color: colors.primary['700'],
+  },
+  linksContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: colors.secondary[300],
+    marginTop: spacing['4xl'],
+  },
+  closeButton: {
+    paddingVertical: spacing.md,
   },
   signout: {
     flex: 1,

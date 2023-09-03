@@ -25,6 +25,7 @@ export interface UserState {
   user?: User;
   error?: Error;
   updateUser: (mutationFn: (user: User) => void) => Promise<User | undefined>;
+  deleteUser: () => Promise<void>;
 }
 
 const initialState: UserState = {
@@ -33,6 +34,9 @@ const initialState: UserState = {
   updateUser: async (mutationFn: (user: User) => void) => {
     console.warn('No User provider found');
     return {} as User;
+  },
+  deleteUser: async () => {
+    console.warn('No User provider found');
   },
 };
 
@@ -138,9 +142,17 @@ export const UserProvider: FC<UserProviderProps> = ({ uid, children }) => {
       return user;
     };
 
+    const deleteUser = async () => {
+      if (user) {
+        await userService.deleteUser(user.uid);
+        dispatch({ type: DispatchTypes.RESET, payload: {} });
+      }
+    };
+
     return {
       ...userState,
       updateUser,
+      deleteUser,
     };
   }, [userState, user]);
 

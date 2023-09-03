@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, View } from 'react-native';
+import { Pressable, Text, StyleSheet, View, ViewStyle } from 'react-native';
 import { spacing, colors, fontSize, border } from '@translate-us/styles';
 
 interface ButtonProps {
@@ -7,6 +7,7 @@ interface ButtonProps {
   type?: 'primary' | 'default' | 'link';
   block?: boolean;
   disabled?: boolean;
+  styles?: ViewStyle;
   onPress?: () => void;
 }
 
@@ -15,6 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'primary',
   block = false,
   disabled = false,
+  styles: customStyles,
   onPress,
 }) => {
   const [isActive, setActive] = React.useState<boolean>(false);
@@ -52,7 +54,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <View style={styles.container}>
       <Pressable
-        style={styles.button}
+        style={[styles.button, customStyles]}
         onPressIn={() => !disabled && setActive(true)}
         onPressOut={() => !disabled && setActive(false)}
         onPress={!disabled ? onPress : undefined}>

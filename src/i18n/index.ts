@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import en from './en/translations.json';
-import es from './es/translations.json';
-import ru from './ru/translations.json';
+// import es from './es/translations.json';
+// import ru from './ru/translations.json';
 
 export interface Language {
   code: string;
@@ -18,12 +18,12 @@ const resources = {
   en: {
     translation: en,
   },
-  es: {
-    translation: es,
-  },
-  ru: {
-    translation: ru,
-  },
+  // es: {
+  //   translation: es,
+  // },
+  // ru: {
+  //   translation: ru,
+  // },
 };
 
 export const getDefaultLanguage = () => {
@@ -49,14 +49,14 @@ export const supportedInterfaceLanguages: SupportedLanguages = {
     code: 'en-US',
     name: 'English',
   },
-  'es-US': {
-    code: 'es-US',
-    name: 'Spanish',
-  },
-  'ru-RU': {
-    code: 'ru-RU',
-    name: 'Russian',
-  },
+  // 'es-US': {
+  //   code: 'es-US',
+  //   name: 'Spanish',
+  // },
+  // 'ru-RU': {
+  //   code: 'ru-RU',
+  //   name: 'Russian',
+  // },
 };
 
 export const defaultInterfaceLanguage: Language = {

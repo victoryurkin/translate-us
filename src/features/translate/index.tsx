@@ -15,6 +15,7 @@ import { Settings } from './settings';
 import { Language, supportedLanguages } from '@translate-us/constants';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
+import { PrivacyPolicy, TermsOfUse } from './components';
 
 export const Translate: React.FC = () => {
   const { user, updateUser } = useUser();
@@ -30,6 +31,8 @@ export const Translate: React.FC = () => {
   const [sourceLanguage, setSourceLanguage] = React.useState<Language>();
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
   const [isSettingsOpen, toggleSettings] = React.useState(false);
+  const [isPrivacyOpen, togglePrivacy] = React.useState(false);
+  const [isTermsOpen, toggleTerms] = React.useState(false);
 
   React.useEffect(() => {
     if (user!.defaultSourceLanguage) {
@@ -70,99 +73,111 @@ export const Translate: React.FC = () => {
   }, [targetLanguage]);
 
   return (
-    <Drawer
-      drawerPosition="right"
-      open={isSettingsOpen}
-      onOpen={() => toggleSettings(true)}
-      onClose={() => toggleSettings(false)}
-      renderDrawerContent={() => {
-        return (
-          <BottomSheetModalProvider>
-            <Settings />
-          </BottomSheetModalProvider>
-        );
-      }}>
-      <BottomSheetModalProvider>
-        <Layout>
-          <View style={styles.container}>
-            <LinearGradient
-              colors={[colors.primary[600], colors.primary[700]]}
-              style={styles.topBar}>
-              <ButtonSettings onPress={() => toggleSettings(!isSettingsOpen)} />
-            </LinearGradient>
-            <View style={styles.absoluteContainer}>
-              <LanguageSelector
-                language={sourceLanguage}
-                onChange={(lang: Language) => setSourceLanguage(lang)}
-                type="translate-source"
+    <>
+      <Drawer
+        drawerPosition="right"
+        open={isSettingsOpen}
+        onOpen={() => toggleSettings(true)}
+        onClose={() => toggleSettings(false)}
+        renderDrawerContent={() => {
+          return (
+            <BottomSheetModalProvider>
+              <Settings
+                onPrivacy={() => togglePrivacy(true)}
+                onTerms={() => toggleTerms(true)}
+              />
+            </BottomSheetModalProvider>
+          );
+        }}>
+        <BottomSheetModalProvider>
+          <Layout>
+            <View style={styles.container}>
+              <LinearGradient
+                colors={[colors.primary[600], colors.primary[700]]}
+                style={styles.topBar}>
+                <ButtonSettings
+                  onPress={() => toggleSettings(!isSettingsOpen)}
+                />
+              </LinearGradient>
+              <View style={styles.absoluteContainer}>
+                <LanguageSelector
+                  language={sourceLanguage}
+                  onChange={(lang: Language) => setSourceLanguage(lang)}
+                  type="translate-source"
+                />
+              </View>
+              <View style={styles.contentTopContainer}>
+                <ScrollView contentContainerStyle={styles.content}>
+                  <Text style={styles.translationText}>
+                    {job?.sourceCode === sourceLanguage?.code &&
+                      job?.transcription}
+                    {job?.targetCode === sourceLanguage?.code && (
+                      <>
+                        {(job?.isTranslationRunning ||
+                          job?.isWaitingTranscriptionEndSignal) &&
+                          'Loading...'}
+                        {job?.translation}
+                      </>
+                    )}
+                  </Text>
+                </ScrollView>
+              </View>
+              <View style={styles.absoluteContainer}>
+                <ButtonTranslate
+                  onStartUpRecording={() =>
+                    sourceLanguage &&
+                    targetLanguage &&
+                    startRecording(sourceLanguage.code, targetLanguage.code)
+                  }
+                  onStartDownRecording={() =>
+                    sourceLanguage &&
+                    targetLanguage &&
+                    startRecording(targetLanguage.code, sourceLanguage.code)
+                  }
+                  onStopRecording={stopRecording}
+                  isLoading={
+                    job?.isTranslationRunning ||
+                    job?.isWaitingTranscriptionEndSignal
+                  }
+                />
+              </View>
+              <View style={styles.contentBottomContainer}>
+                <ScrollView contentContainerStyle={styles.content}>
+                  <Text style={styles.translationText}>
+                    {job?.sourceCode === targetLanguage?.code &&
+                      job?.transcription}
+                    {job?.targetCode === targetLanguage?.code && (
+                      <>
+                        {(job?.isTranslationRunning ||
+                          job?.isWaitingTranscriptionEndSignal) &&
+                          'Loading...'}
+                        {job?.translation}
+                      </>
+                    )}
+                  </Text>
+                </ScrollView>
+              </View>
+              <View style={styles.absoluteContainer}>
+                <LanguageSelector
+                  language={targetLanguage}
+                  onChange={(lang: Language) => setTargetLanguage(lang)}
+                  type="translate-target"
+                />
+              </View>
+              <LinearGradient
+                colors={[colors.primary[700], colors.primary[600]]}
+                style={styles.bottomBar}
               />
             </View>
-            <View style={styles.contentTopContainer}>
-              <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.translationText}>
-                  {job?.sourceCode === sourceLanguage?.code &&
-                    job?.transcription}
-                  {job?.targetCode === sourceLanguage?.code && (
-                    <>
-                      {(job?.isTranslationRunning ||
-                        job?.isWaitingTranscriptionEndSignal) &&
-                        'Loading...'}
-                      {job?.translation}
-                    </>
-                  )}
-                </Text>
-              </ScrollView>
-            </View>
-            <View style={styles.absoluteContainer}>
-              <ButtonTranslate
-                onStartUpRecording={() =>
-                  sourceLanguage &&
-                  targetLanguage &&
-                  startRecording(sourceLanguage.code, targetLanguage.code)
-                }
-                onStartDownRecording={() =>
-                  sourceLanguage &&
-                  targetLanguage &&
-                  startRecording(targetLanguage.code, sourceLanguage.code)
-                }
-                onStopRecording={stopRecording}
-                isLoading={
-                  job?.isTranslationRunning ||
-                  job?.isWaitingTranscriptionEndSignal
-                }
-              />
-            </View>
-            <View style={styles.contentBottomContainer}>
-              <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.translationText}>
-                  {job?.sourceCode === targetLanguage?.code &&
-                    job?.transcription}
-                  {job?.targetCode === targetLanguage?.code && (
-                    <>
-                      {(job?.isTranslationRunning ||
-                        job?.isWaitingTranscriptionEndSignal) &&
-                        'Loading...'}
-                      {job?.translation}
-                    </>
-                  )}
-                </Text>
-              </ScrollView>
-            </View>
-            <View style={styles.absoluteContainer}>
-              <LanguageSelector
-                language={targetLanguage}
-                onChange={(lang: Language) => setTargetLanguage(lang)}
-                type="translate-target"
-              />
-            </View>
-            <LinearGradient
-              colors={[colors.primary[700], colors.primary[600]]}
-              style={styles.bottomBar}
-            />
-          </View>
-        </Layout>
-      </BottomSheetModalProvider>
-    </Drawer>
+          </Layout>
+        </BottomSheetModalProvider>
+      </Drawer>
+      <TermsOfUse isOpen={isTermsOpen} onClose={() => toggleTerms(false)} />
+      <PrivacyPolicy
+        isOpen={isPrivacyOpen}
+        onClose={() => togglePrivacy(false)}
+      />
+    </>
   );
 };
 
