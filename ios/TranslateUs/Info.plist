@@ -40,7 +40,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>The app requires your permission to use the microphone.</string>
+	<string>In order to recognize speech for translation Translate Us requires your permission to use the microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app requires this permission</string>
 	<key>UILaunchStoryboardName</key>

@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Drawer } from 'react-native-drawer-layout';
 import { Layout } from '@translate-us/components';
@@ -108,17 +114,19 @@ export const Translate: React.FC = () => {
               </View>
               <View style={styles.contentTopContainer}>
                 <ScrollView contentContainerStyle={styles.content}>
+                  {job?.targetCode === sourceLanguage?.code &&
+                    (job?.isTranslationRunning ||
+                      job?.isWaitingTranscriptionEndSignal) && (
+                      <ActivityIndicator
+                        size="small"
+                        color={colors.secondary[400]}
+                      />
+                    )}
                   <Text style={styles.translationText}>
                     {job?.sourceCode === sourceLanguage?.code &&
                       job?.transcription}
-                    {job?.targetCode === sourceLanguage?.code && (
-                      <>
-                        {(job?.isTranslationRunning ||
-                          job?.isWaitingTranscriptionEndSignal) &&
-                          'Loading...'}
-                        {job?.translation}
-                      </>
-                    )}
+                    {job?.targetCode === sourceLanguage?.code &&
+                      job?.translation}
                   </Text>
                 </ScrollView>
               </View>
@@ -143,17 +151,19 @@ export const Translate: React.FC = () => {
               </View>
               <View style={styles.contentBottomContainer}>
                 <ScrollView contentContainerStyle={styles.content}>
+                  {job?.targetCode === targetLanguage?.code &&
+                    (job?.isTranslationRunning ||
+                      job?.isWaitingTranscriptionEndSignal) && (
+                      <ActivityIndicator
+                        size="small"
+                        color={colors.secondary[400]}
+                      />
+                    )}
                   <Text style={styles.translationText}>
                     {job?.sourceCode === targetLanguage?.code &&
                       job?.transcription}
-                    {job?.targetCode === targetLanguage?.code && (
-                      <>
-                        {(job?.isTranslationRunning ||
-                          job?.isWaitingTranscriptionEndSignal) &&
-                          'Loading...'}
-                        {job?.translation}
-                      </>
-                    )}
+                    {job?.targetCode === targetLanguage?.code &&
+                      job?.translation}
                   </Text>
                 </ScrollView>
               </View>

@@ -81,9 +81,9 @@ export const Router = () => {
           </Stack.Navigator>
         </NavigationContainer>
       )}
-      {/* {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
+      {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
         <Subscriptions />
-      )} */}
+      )}
     </React.Fragment>
   );
 };

@@ -4,6 +4,7 @@ import { PurchasesPackage } from 'react-native-purchases';
 import { ChevronRightIcon } from 'react-native-heroicons/solid';
 import { colors, spacing } from '@translate-us/styles';
 import { useTranslation } from '@translate-us/i18n';
+import { products } from './constants';
 
 interface ButtonProps {
   purchasePackage: PurchasesPackage;
@@ -25,7 +26,9 @@ export const Button: React.FC<ButtonProps> = ({ purchasePackage, onPress }) => {
         <ChevronRightIcon color="white" />
       </View>
       <View style={styles.buttonTitle}>
-        <Text style={styles.titleText}>{purchasePackage.product.title}</Text>
+        <Text style={styles.titleText}>
+          {t(`products.${products[purchasePackage.product.identifier].i18n}`)}
+        </Text>
       </View>
       <Text style={styles.buttonPrice}>
         {t('price', { val: purchasePackage.product.price })}

@@ -61,5 +61,10 @@
   },
   "terms_of_use": {
     "title": "Terms Of Use"
+  },
+  "products": {
+    "monthly_subscription": "Monthly Subscription",
+    "annual_subscription": "Annual Subscription",
+    "one_day": "One Day Access"
   }
 }

@@ -54,12 +54,6 @@ export const useStream = () => {
   const isRecording = useRef(false);
 
   const connect = useCallback(async () => {
-    // try {
-    //   await fetch(apiUrl);
-    // } catch (error) {
-    //   console.log('Error connecting to the server: ', error);
-    // }
-
     socketRef.current = io(apiUrl, {
       reconnectionDelayMax: 500,
       auth: {
@@ -171,8 +165,8 @@ export const useStream = () => {
   }, []);
 
   const disconnect = useCallback(() => {
-    socketRef.current?.disconnect();
     socketRef.current?.removeAllListeners();
+    socketRef.current?.disconnect();
     socketRef.current = undefined;
   }, []);
 

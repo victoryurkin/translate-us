@@ -72,7 +72,14 @@ export const Content: React.FC<Props> = ({
           </Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
-              .filter(item => item.product.productCategory === 'SUBSCRIPTION')
+              .filter(item => {
+                const productObj = item.product as unknown;
+                const product = productObj as { productType: string };
+                return (
+                  item.product.productCategory === 'SUBSCRIPTION' &&
+                  product.productType !== 'PREPAID_SUBSCRIPTION'
+                );
+              })
               .map((item, index) => {
                 return (
                   <Button
@@ -90,7 +97,14 @@ export const Content: React.FC<Props> = ({
           </Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
-              .filter(item => item.product.productCategory !== 'SUBSCRIPTION')
+              .filter(item => {
+                const productObj = item.product as unknown;
+                const product = productObj as { productType: string };
+                return (
+                  item.product.productCategory !== 'SUBSCRIPTION' ||
+                  product.productType === 'PREPAID_SUBSCRIPTION'
+                );
+              })
               .map((item, index) => {
                 return (
                   <Button
