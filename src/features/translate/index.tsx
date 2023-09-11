@@ -14,7 +14,7 @@ import { useUser } from '@translate-us/context';
 import { border, colors, fontSize, spacing } from '@translate-us/styles';
 import {
   ButtonTranslate,
-  ButtonSettings,
+  // ButtonSettings,
   LanguageSelector,
 } from './components';
 import { Settings } from './settings';
@@ -101,9 +101,9 @@ export const Translate: React.FC = () => {
               <LinearGradient
                 colors={[colors.primary[600], colors.primary[700]]}
                 style={styles.topBar}>
-                <ButtonSettings
+                {/* <ButtonSettings
                   onPress={() => toggleSettings(!isSettingsOpen)}
-                />
+                /> */}
               </LinearGradient>
               <View style={styles.absoluteContainer}>
                 <LanguageSelector

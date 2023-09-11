@@ -276,6 +276,7 @@ const styles = StyleSheet.create({
 
   loaderContainer: {
     position: 'absolute',
+    zIndex: 50,
     top: 0,
     left: 0,
     width: '100%',

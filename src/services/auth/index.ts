@@ -4,6 +4,10 @@ export const signIn = async (email: string, password: string) => {
   return auth().signInWithEmailAndPassword(email, password);
 };
 
+export const signInAsGuest = async () => {
+  return auth().signInAnonymously();
+};
+
 export const signUp = async (email: string, password: string) => {
   return auth().createUserWithEmailAndPassword(email, password);
 };

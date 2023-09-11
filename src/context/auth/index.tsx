@@ -14,6 +14,7 @@ import { notifications, AppEvents } from '@translate-us/clients';
 export interface AuthUser {
   uid: string;
   email: string;
+  isAnonymous: boolean;
 }
 
 export enum AuthErrorCodes {
@@ -39,6 +40,7 @@ export interface AuthState {
   authUser?: AuthUser;
   accessToken?: string;
   signIn: (username: string, password: string) => Promise<void>;
+  signInAsGuest: () => Promise<void>;
   signUp: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -47,6 +49,9 @@ export interface AuthState {
 const initialState: AuthState = {
   isLoading: true,
   signIn: async () => {
+    console.log('AuthProvider was not setup');
+  },
+  signInAsGuest: async () => {
     console.log('AuthProvider was not setup');
   },
   signUp: async () => {
@@ -146,6 +151,24 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const signInAsGuest = async () => {
+    const userCredential = await authService.signInAsGuest();
+    if (userCredential?.user) {
+      const accessToken = await userCredential.user.getIdToken();
+      await userService.createUser(
+        userCredential.user.uid,
+        userCredential.user.email || '',
+      );
+      dispatch({
+        type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
+        payload: {
+          authUser: userCredential.user,
+          accessToken: accessToken,
+        },
+      });
+    }
+  };
+
   const signUp = async (username: string, password: string) => {
     const userCredential = await authService.signUp(username, password);
     if (userCredential?.user) {
@@ -211,6 +234,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     () => ({
       ...authState,
       signIn,
+      signInAsGuest,
       signUp,
       signOut,
       resetPassword,
