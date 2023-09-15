@@ -105,6 +105,7 @@ const reducer = (state: AuthState, { type, payload }: DispatchProps) => {
     case DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN:
       return {
         ...state,
+        isLoading: false,
         authUser: (
           payload as {
             authUser: AuthUser;
@@ -209,22 +210,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             },
           });
         } else {
-          // dispatch({
-          //   type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
-          //   payload: {
-          //     authUser: undefined,
-          //     accessToken: undefined,
-          //   },
-          // });
-          signInAsGuest();
+          await signInAsGuest();
         }
       } catch (error) {
         console.log('Error getting user: ', error);
-      } finally {
-        dispatch({
-          type: DispatchTypes.SET_LOADING,
-          payload: false,
-        });
       }
     });
 

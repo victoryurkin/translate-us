@@ -8,6 +8,7 @@ import { Subscriptions } from '@translate-us/features';
 import { useAuth, UserProvider, useUser, useApp } from '@translate-us/context';
 import { uidNoIap } from '@translate-us/constants';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { Netinfo } from '@translate-us/components';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,13 +64,6 @@ export const Router = () => {
       {!isLoading && (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Translate">
-            {/* {!authUser && (
-              <Stack.Screen
-                name="Auth"
-                component={Auth}
-                options={{ headerShown: false }}
-              />
-            )} */}
             <Stack.Screen
               name="Translate"
               component={UserMiddleware}
@@ -81,6 +75,7 @@ export const Router = () => {
       {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
         <Subscriptions />
       )}
+      <Netinfo />
     </React.Fragment>
   );
 };

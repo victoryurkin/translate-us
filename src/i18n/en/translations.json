@@ -69,5 +69,6 @@
     "year": "year",
     "month": "month",
     "24_hours": "for 24 hours"
-  }
+  },
+  "offline": "Please, check your internet connection"
 }

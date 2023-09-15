@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
-import { Platform } from 'react-native';
+import React from 'react';
+import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
 import Purchases, {
   CustomerInfo,
   PurchasesOfferings,
@@ -92,15 +92,6 @@ export const Subscriptions: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isOpen && !offerings) {
-      setLoading(true);
-    }
-    if (isOpen && offerings) {
-      setLoading(false);
-    }
-  }, [isOpen, offerings]);
-
   return (
     <Modal isOpen={isOpen}>
       {offerings && (
@@ -111,8 +102,23 @@ export const Subscriptions: React.FC = () => {
           onRestore={handleRestore}
         />
       )}
+      {!offerings && (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
     </Modal>
   );
 };
 
 export default Subscriptions;
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    width: '100%',
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
