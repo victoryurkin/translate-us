@@ -209,13 +209,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             },
           });
         } else {
-          dispatch({
-            type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
-            payload: {
-              authUser: undefined,
-              accessToken: undefined,
-            },
-          });
+          // dispatch({
+          //   type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
+          //   payload: {
+          //     authUser: undefined,
+          //     accessToken: undefined,
+          //   },
+          // });
+          signInAsGuest();
         }
       } catch (error) {
         console.log('Error getting user: ', error);

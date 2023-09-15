@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import Purchases, {
   CustomerInfo,
@@ -91,6 +91,15 @@ export const Subscriptions: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isOpen && !offerings) {
+      setLoading(true);
+    }
+    if (isOpen && offerings) {
+      setLoading(false);
+    }
+  }, [isOpen, offerings]);
 
   return (
     <Modal isOpen={isOpen}>

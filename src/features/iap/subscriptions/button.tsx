@@ -32,6 +32,10 @@ export const Button: React.FC<ButtonProps> = ({ purchasePackage, onPress }) => {
       </View>
       <Text style={styles.buttonPrice}>
         {t('price', { val: purchasePackage.product.price })}
+        {!!products[purchasePackage.product.identifier].period &&
+          ` / ${t(
+            `products.${products[purchasePackage.product.identifier].period}`,
+          )}`}
       </Text>
     </Pressable>
   );

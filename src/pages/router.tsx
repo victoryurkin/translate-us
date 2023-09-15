@@ -33,7 +33,7 @@ const UserMiddleware = () => {
 };
 
 export const Router = () => {
-  const { isLoading, authUser, signInAsGuest } = useAuth();
+  const { isLoading, authUser } = useAuth();
   const { setLoading } = useApp();
 
   React.useEffect(() => {
@@ -58,17 +58,11 @@ export const Router = () => {
     setLoading(isLoading);
   }, [isLoading]);
 
-  React.useEffect(() => {
-    if (!isLoading && !authUser) {
-      signInAsGuest();
-    }
-  }, [isLoading]);
-
   return (
     <React.Fragment>
       {!isLoading && (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName={authUser ? 'Translate' : 'Auth'}>
+          <Stack.Navigator initialRouteName="Translate">
             {/* {!authUser && (
               <Stack.Screen
                 name="Auth"
@@ -76,14 +70,11 @@ export const Router = () => {
                 options={{ headerShown: false }}
               />
             )} */}
-
-            {!!authUser && (
-              <Stack.Screen
-                name="Translate"
-                component={UserMiddleware}
-                options={{ headerShown: false }}
-              />
-            )}
+            <Stack.Screen
+              name="Translate"
+              component={UserMiddleware}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       )}

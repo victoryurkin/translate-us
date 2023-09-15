@@ -65,6 +65,9 @@
   "products": {
     "monthly_subscription": "Monthly Subscription",
     "annual_subscription": "Annual Subscription",
-    "one_day": "One Day Access"
+    "one_day": "One Day Access",
+    "year": "year",
+    "month": "month",
+    "24_hours": "for 24 hours"
   }
 }

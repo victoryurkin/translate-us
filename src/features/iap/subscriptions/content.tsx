@@ -147,7 +147,7 @@ export const Content: React.FC<Props> = ({
 
           <View style={styles.descriptionContainer}>
             <Text style={styles.description}>
-              Monthly or yearly recurring billing, can be canceled anytime
+              Monthly or annual recurring billing, can be canceled anytime
             </Text>
           </View>
         </View>
