@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { authService, userService } from '@translate-us/services';
 import { notifications, AppEvents } from '@translate-us/clients';
+import { log } from '@translate-us/clients';
 
 export interface AuthUser {
   uid: string;
@@ -201,6 +202,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const subscriber = auth().onAuthStateChanged(async user => {
       try {
         if (user) {
+          log.setContext({
+            uid: user.uid,
+          });
+          // log.info('User signed in', user.uid);
+          log.event('auth_sign_in');
           const accessToken = await user.getIdToken();
           dispatch({
             type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,

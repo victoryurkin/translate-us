@@ -7,6 +7,7 @@ import { Buffer } from 'buffer';
 import { produce } from 'immer';
 import { writeFile, DocumentDirectoryPath } from 'react-native-fs';
 import Sound from 'react-native-sound';
+import { log } from '@translate-us/clients';
 
 enum OutgoingEvents {
   START_RECORDING = 'startRecording',
@@ -54,6 +55,7 @@ export const useStream = () => {
   const isRecording = useRef(false);
 
   const connect = useCallback(async () => {
+    log.debug('Connecting to socket.io server');
     socketRef.current = io(apiUrl, {
       reconnectionDelayMax: 500,
       auth: {
@@ -158,15 +160,23 @@ export const useStream = () => {
 
   const waitServerResponse = useCallback(async () => {
     try {
+      log.debug('Checking server status');
       await fetch(`${apiUrl}/healthcheck`);
+      log.debug('Connected to server');
     } catch (error) {
-      console.error('Error checking server status: ', error);
+      log.error('Error checking server status: ', error);
     }
   }, []);
 
   const disconnect = useCallback(() => {
+    log.debug('Disconnecting from socket.io server. Listeners: ', {
+      listeners: socketRef.current?.listeners,
+    });
     socketRef.current?.removeAllListeners();
     socketRef.current?.disconnect();
+    log.debug('Disconnected from socket.io server. Listeners: ', {
+      listeners: socketRef.current?.listeners,
+    });
     socketRef.current = undefined;
   }, []);
 
@@ -192,6 +202,15 @@ export const useStream = () => {
       if (!socketRef.current) {
         return;
       }
+
+      log.debug(
+        'Start recording: ',
+        socketRef.current.connected,
+        socketRef.current.active,
+        socketRef.current.disconnected,
+        socketRef.current.id,
+        socketRef.current.listeners,
+      );
 
       // console.log('Start recording');
       // console.log(

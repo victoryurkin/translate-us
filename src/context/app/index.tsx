@@ -6,12 +6,15 @@ import React, {
   useContext,
 } from 'react';
 import { Loader } from '@translate-us/components';
+import { log } from '@translate-us/clients';
+import uuid from 'react-native-uuid';
 
 /**
  * The User state property
  */
 export interface AppState {
   isLoading: boolean;
+  sessionId?: string;
   setLoading: (value: boolean) => void;
 }
 
@@ -27,6 +30,7 @@ const AppContext = createContext(initialState);
 
 enum DispatchTypes {
   SET_LOADING,
+  SET_SESSION_ID,
 }
 
 interface DispatchProps {
@@ -40,6 +44,11 @@ const reducer = (state: AppState, { type, payload }: DispatchProps) => {
       return {
         ...state,
         isLoading: payload as boolean,
+      };
+    case DispatchTypes.SET_SESSION_ID:
+      return {
+        ...state,
+        sessionId: payload as string,
       };
     default:
       return state;
@@ -63,6 +72,17 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
       setLoading,
     };
   }, [appState]);
+
+  React.useEffect(() => {
+    const sessionId = uuid.v4();
+    log.setContext({ sessionId });
+    log.info('Session started');
+    log.event('session_started');
+    dispatch({
+      type: DispatchTypes.SET_SESSION_ID,
+      payload: sessionId,
+    });
+  }, []);
 
   return (
     <AppContext.Provider value={providerValue}>

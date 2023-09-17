@@ -8,20 +8,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Drawer } from 'react-native-drawer-layout';
 import { Layout } from '@translate-us/components';
 import { useUser } from '@translate-us/context';
 import { border, colors, fontSize, spacing } from '@translate-us/styles';
-import {
-  ButtonTranslate,
-  // ButtonSettings,
-  LanguageSelector,
-} from './components';
-import { Settings } from './settings';
+import { ButtonTranslate, LanguageSelector } from './components';
 import { Language, supportedLanguages } from '@translate-us/constants';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
 import { PrivacyPolicy, TermsOfUse } from './components';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export const Translate: React.FC = () => {
   const { user, updateUser } = useUser();
@@ -36,7 +31,6 @@ export const Translate: React.FC = () => {
 
   const [sourceLanguage, setSourceLanguage] = React.useState<Language>();
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
-  const [isSettingsOpen, toggleSettings] = React.useState(false);
   const [isPrivacyOpen, togglePrivacy] = React.useState(false);
   const [isTermsOpen, toggleTerms] = React.useState(false);
 
@@ -80,31 +74,14 @@ export const Translate: React.FC = () => {
 
   return (
     <>
-      <Drawer
-        drawerPosition="right"
-        open={isSettingsOpen}
-        onOpen={() => toggleSettings(true)}
-        onClose={() => toggleSettings(false)}
-        renderDrawerContent={() => {
-          return (
-            <BottomSheetModalProvider>
-              <Settings
-                onPrivacy={() => togglePrivacy(true)}
-                onTerms={() => toggleTerms(true)}
-              />
-            </BottomSheetModalProvider>
-          );
-        }}>
+      <GestureHandlerRootView>
         <BottomSheetModalProvider>
           <Layout>
             <View style={styles.container}>
               <LinearGradient
                 colors={[colors.primary[600], colors.primary[700]]}
-                style={styles.topBar}>
-                {/* <ButtonSettings
-                  onPress={() => toggleSettings(!isSettingsOpen)}
-                /> */}
-              </LinearGradient>
+                style={styles.topBar}
+              />
               <View style={styles.absoluteContainer}>
                 <LanguageSelector
                   language={sourceLanguage}
@@ -181,7 +158,7 @@ export const Translate: React.FC = () => {
             </View>
           </Layout>
         </BottomSheetModalProvider>
-      </Drawer>
+      </GestureHandlerRootView>
       <TermsOfUse isOpen={isTermsOpen} onClose={() => toggleTerms(false)} />
       <PrivacyPolicy
         isOpen={isPrivacyOpen}

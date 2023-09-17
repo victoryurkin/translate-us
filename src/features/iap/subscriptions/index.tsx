@@ -10,6 +10,7 @@ import { Modal } from '@translate-us/components';
 import { useAuth } from '@translate-us/context';
 import { Content } from './content';
 import { isActive } from './utils';
+import { log } from '@translate-us/clients';
 
 export const Subscriptions: React.FC = () => {
   const [isOpen, toggleModal] = React.useState(false);
@@ -74,6 +75,7 @@ export const Subscriptions: React.FC = () => {
     try {
       setLoading(true);
       await Purchases.purchasePackage(pckg);
+      log.event('purchased_package');
     } catch (error) {
       console.log('Error purchasing package: ', error);
     } finally {
