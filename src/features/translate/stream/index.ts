@@ -1,4 +1,5 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useRef, useState, useEffect } from 'react';
 import { AppState } from 'react-native';
 import MicrophoneStream from 'react-native-live-audio-stream';
 import { useAuth, useApp } from '@translate-us/context';
@@ -54,35 +55,13 @@ export const useStream = () => {
   const socketRef = useRef<Socket>();
   const isRecording = useRef(false);
 
-  const connect = useCallback(async () => {
+  const connect = async () => {
     log.debug('Connecting to socket.io server');
     socketRef.current = io(apiUrl, {
-      reconnectionDelayMax: 500,
       auth: {
         token: accessToken,
       },
     });
-
-    // socketRef.current.on('connect', () => {
-    //   console.log('!!! connected !!!');
-    // });
-
-    // socketRef.current.on('disconnect', reason => {
-    //   console.log('!!! disconnected: ', reason);
-    // });
-
-    // socketRef.current.on('disconnect', () => {
-    //   // if (socketRef.current) {
-    //   //   socketRef.current.connect();
-    //   // } else {
-    //   //   socketRef.current = io('http://localhost:8000', {
-    //   //     reconnectionDelayMax: 500,
-    //   //     auth: {
-    //   //       token: accessToken,
-    //   //     },
-    //   //   });
-    //   // }
-    // });
 
     socketRef.current.on(IncomingEvents.TRANSCRIPTION_DATA, (data: string) => {
       try {
@@ -156,9 +135,9 @@ export const useStream = () => {
         console.log('Transcription data is invalid: ', err);
       }
     });
-  }, [accessToken]);
+  };
 
-  const waitServerResponse = useCallback(async () => {
+  const waitServerResponse = async () => {
     try {
       log.debug('Checking server status');
       await fetch(`${apiUrl}/healthcheck`);
@@ -166,9 +145,9 @@ export const useStream = () => {
     } catch (error) {
       log.error('Error checking server status: ', error);
     }
-  }, []);
+  };
 
-  const disconnect = useCallback(() => {
+  const disconnect = () => {
     log.debug('Disconnecting from socket.io server. Listeners: ', {
       listeners: socketRef.current?.listeners,
     });
@@ -178,79 +157,56 @@ export const useStream = () => {
       listeners: socketRef.current?.listeners,
     });
     socketRef.current = undefined;
-  }, []);
+  };
 
   /***
    * OUTGOING EVENTS
    ***/
 
-  // const reconnect = (): Promise<void> =>
-  //   new Promise(resolve => {
-  //     try {
-  //       disconnect();
-  //       connect();
-  //       setTimeout(() => {
-  //         resolve();
-  //       }, 300);
-  //     } catch (error) {
-  //       console.log('Error reconnecting');
-  //     }
-  //   });
+  const startRecording = async (
+    sourceLanguage: string,
+    targetLanguage: string,
+  ) => {
+    if (!socketRef.current) {
+      return;
+    }
 
-  const startRecording = useCallback(
-    async (sourceLanguage: string, targetLanguage: string) => {
-      if (!socketRef.current) {
-        return;
-      }
+    if (!socketRef.current.connected) {
+      resetConnection();
+    }
 
-      log.debug(
-        'Start recording: ',
-        socketRef.current.connected,
-        socketRef.current.active,
-        socketRef.current.disconnected,
-        socketRef.current.id,
-        socketRef.current.listeners,
-      );
+    log.debug(
+      'Start recording: ',
+      socketRef.current.connected,
+      socketRef.current.active,
+      socketRef.current.disconnected,
+      socketRef.current.id,
+      socketRef.current.listeners,
+    );
 
-      // console.log('Start recording');
-      // console.log(
-      //   'Connection status: ',
-      //   socketRef.current?.active,
-      //   socketRef.current?.connected,
-      // );
+    isRecording.current = true;
+    socketRef.current.emit(OutgoingEvents.START_RECORDING, {
+      sourceLanguage,
+      targetLanguage,
+    });
+    const updatedJob = {
+      isRunning: true,
+      startTime: Date.now(),
+      isTranscriptionRunning: true,
+      isTranslationRunning: false,
+      isWaitingTranscriptionEndSignal: false,
+      sourceCode: sourceLanguage,
+      targetCode: targetLanguage,
+      transcription: '',
+      translation: '',
+      audioOutput: '',
+    };
+    jobRef.current = updatedJob;
+    setJob(updatedJob);
 
-      // if (!socketRef.current?.connected) {
-      //   disconnect();
-      //   await waitServerResponse();
-      //   socketRef.current.connect();
-      // }
-
-      isRecording.current = true;
-      socketRef.current.emit(OutgoingEvents.START_RECORDING, {
-        sourceLanguage,
-        targetLanguage,
-      });
-      const updatedJob = {
-        isRunning: true,
-        startTime: Date.now(),
-        isTranscriptionRunning: true,
-        isTranslationRunning: false,
-        isWaitingTranscriptionEndSignal: false,
-        sourceCode: sourceLanguage,
-        targetCode: targetLanguage,
-        transcription: '',
-        translation: '',
-        audioOutput: '',
-      };
-      jobRef.current = updatedJob;
-      setJob(updatedJob);
-
-      // Start microphone stream
-      MicrophoneStream.start();
-    },
-
-    [],
-  );
+    // Start microphone stream
+    MicrophoneStream.start();
+  };
 
   MicrophoneStream.on('data', data => {
     if (isRecording.current === true) {
@@ -263,7 +219,7 @@ export const useStream = () => {
     }
   });
 
-  const stopRecording = useCallback(async () => {
+  const stopRecording = async () => {
     isRecording.current = false;
     MicrophoneStream.stop();
     socketRef.current?.emit(OutgoingEvents.STOP_RECORDING);
@@ -283,7 +239,13 @@ export const useStream = () => {
         }
       }, 1000);
     }
-  }, []);
+  };
+
+  const resetConnection = async () => {
+    disconnect();
+    await waitServerResponse();
+    connect();
+  };
 
   useEffect(() => {
     const stateChangeHandler = async (newAppState: string) => {
@@ -296,7 +258,6 @@ export const useStream = () => {
         }
       }
     };
-
     const appStateSubscription = AppState.addEventListener(
       'change',
       stateChangeHandler,
@@ -304,7 +265,6 @@ export const useStream = () => {
     return () => {
       appStateSubscription.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

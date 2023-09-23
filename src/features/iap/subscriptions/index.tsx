@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { Platform, ActivityIndicator, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  AppState,
+} from 'react-native';
 import Purchases, {
   CustomerInfo,
   PurchasesOfferings,
@@ -33,19 +39,20 @@ export const Subscriptions: React.FC = () => {
     }
   }, []);
 
-  React.useEffect(() => {
-    const loadCustomerInfo = async () => {
-      try {
-        const customerInfo = await Purchases.getCustomerInfo();
-        if (!isActive(customerInfo.entitlements.active)) {
-          toggleModal(true);
-        } else {
-          toggleModal(false);
-        }
-      } catch (error) {
-        console.log('Error loading RevenueCat customer info: ', error);
+  const loadCustomerInfo = async () => {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo();
+      if (!isActive(customerInfo.entitlements.active)) {
+        toggleModal(true);
+      } else {
+        toggleModal(false);
       }
-    };
+    } catch (error) {
+      console.log('Error loading RevenueCat customer info: ', error);
+    }
+  };
+
+  React.useEffect(() => {
     loadCustomerInfo();
   }, []);
 
@@ -94,8 +101,23 @@ export const Subscriptions: React.FC = () => {
     }
   };
 
+  React.useEffect(() => {
+    const stateChangeHandler = async (newAppState: string) => {
+      if (newAppState === 'active') {
+        loadCustomerInfo();
+      }
+    };
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      stateChangeHandler,
+    );
+    return () => {
+      appStateSubscription.remove();
+    };
+  }, []);
+
   return (
-    <Modal isOpen={isOpen}>
+    <Modal isOpen={isOpen && !!offerings}>
       {offerings && (
         <Content
           isLoading={isLoading}

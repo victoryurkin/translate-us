@@ -16,7 +16,7 @@ export const products: Products = {
     i18n: 'annual_subscription',
     period: 'year',
   },
-  nrSubDay: {
+  prodOneDay: {
     i18n: 'one_day',
   },
   'submonth:planmonth': {
