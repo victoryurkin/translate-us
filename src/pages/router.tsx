@@ -9,8 +9,10 @@ import { useAuth, UserProvider, useUser, useApp } from '@translate-us/context';
 import { uidNoIap } from '@translate-us/constants';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { Netinfo } from '@translate-us/components';
+import { Support } from '@translate-us/features';
+import { RootStackParamList } from '@translate-us/constants';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const TranslateMiddleware = () => {
   const { isLoading, user } = useUser();
@@ -67,6 +69,11 @@ export const Router = () => {
             <Stack.Screen
               name="Translate"
               component={UserMiddleware}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Support"
+              component={Support}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

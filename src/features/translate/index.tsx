@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   ActivityIndicator,
+  // Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Layout } from '@translate-us/components';
@@ -17,9 +18,12 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
 import { PrivacyPolicy, TermsOfUse } from './components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import { useNavigation } from '@translate-us/hooks';
+// import { QuestionMarkCircleIcon } from 'react-native-heroicons/outline';
 
 export const Translate: React.FC = () => {
   const { user, updateUser } = useUser();
+  // const { navigate } = useNavigation();
   const {
     connect,
     disconnect,
@@ -80,8 +84,11 @@ export const Translate: React.FC = () => {
             <View style={styles.container}>
               <LinearGradient
                 colors={[colors.primary[600], colors.primary[700]]}
-                style={styles.topBar}
-              />
+                style={styles.topBar}>
+                {/* <Pressable onPress={() => navigate('Support')}>
+                  <QuestionMarkCircleIcon />
+                </Pressable> */}
+              </LinearGradient>
               <View style={styles.absoluteContainer}>
                 <LanguageSelector
                   language={sourceLanguage}
