@@ -57,10 +57,28 @@ export const useStream = () => {
 
   const connect = async () => {
     log.debug('Connecting to socket.io server');
+    setLoading(true);
     socketRef.current = io(apiUrl, {
       auth: {
         token: accessToken,
       },
+    });
+
+    socketRef.current.on('connect_error', error => {
+      setLoading(false);
+      log.error('Socket.io connect error: ', error);
+      console.log('Socket.io connect error: ', error);
+    });
+
+    socketRef.current.on('connect', () => {
+      setLoading(false);
+      log.debug('Socket.io connected: ', socketRef.current?.id);
+      console.log('Socket.io connected', socketRef.current?.id);
+    });
+
+    socketRef.current.on('disconnect', reason => {
+      log.debug('Socket.io disconnected: ', reason);
+      console.log('Socket.io disconnected: ', reason);
     });
 
     socketRef.current.on(IncomingEvents.TRANSCRIPTION_DATA, (data: string) => {
@@ -167,12 +185,8 @@ export const useStream = () => {
     sourceLanguage: string,
     targetLanguage: string,
   ) => {
-    if (!socketRef.current) {
+    if (!socketRef.current || !socketRef.current.connected) {
       return;
-    }
-
-    if (!socketRef.current.connected) {
-      resetConnection();
     }
 
     log.debug(
@@ -241,20 +255,19 @@ export const useStream = () => {
     }
   };
 
-  const resetConnection = async () => {
-    disconnect();
-    await waitServerResponse();
-    connect();
-  };
-
   useEffect(() => {
     const stateChangeHandler = async (newAppState: string) => {
+      if (newAppState === 'background') {
+        disconnect();
+      }
       if (newAppState === 'active') {
+        setLoading(true);
+        await waitServerResponse();
         if (socketRef.current && !socketRef.current.connected) {
-          setLoading(true);
-          await waitServerResponse();
-          setLoading(false);
           socketRef.current.connect();
+        }
+        if (!socketRef.current) {
+          connect();
         }
       }
     };
