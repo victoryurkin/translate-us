@@ -1,5 +1,7 @@
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
+import { AppEventsLogger } from 'react-native-fbsdk-next';
+
 // import functions from '@react-native-firebase/functions';
 
 // const functionInstance = functions().httpsCallable('logger');
@@ -104,6 +106,10 @@ class Logger {
   event(eventName: string, eventParams?: object): void {
     try {
       analytics().logEvent(eventName, {
+        ...this.context,
+        ...eventParams,
+      });
+      AppEventsLogger.logEvent(eventName, {
         ...this.context,
         ...eventParams,
       });

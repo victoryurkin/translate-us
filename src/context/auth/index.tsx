@@ -39,12 +39,12 @@ export interface AuthState {
   isLoading: boolean;
   error?: Error;
   authUser?: AuthUser;
-  accessToken?: string;
   signIn: (username: string, password: string) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   signUp: (username: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  getAccessToken: () => Promise<string>;
 }
 
 const initialState: AuthState = {
@@ -64,6 +64,10 @@ const initialState: AuthState = {
   resetPassword: async () => {
     console.log('AuthProvider was not setup');
   },
+  getAccessToken: async () => {
+    console.log('AuthProvider was not setup');
+    return '';
+  },
 };
 
 const AuthContext = createContext(initialState);
@@ -72,8 +76,6 @@ enum DispatchTypes {
   SET_ERROR,
   SET_LOADING,
   SET_AUTH_USER,
-  SET_ACCESS_TOKEN,
-  SET_AUTH_USER_ACCESS_TOKEN,
 }
 
 interface DispatchProps {
@@ -96,29 +98,8 @@ const reducer = (state: AuthState, { type, payload }: DispatchProps) => {
     case DispatchTypes.SET_AUTH_USER:
       return {
         ...state,
-        authUser: payload as AuthUser,
-      };
-    case DispatchTypes.SET_ACCESS_TOKEN:
-      return {
-        ...state,
-        accessToken: payload as string,
-      };
-    case DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN:
-      return {
-        ...state,
         isLoading: false,
-        authUser: (
-          payload as {
-            authUser: AuthUser;
-            accessToken: string;
-          }
-        ).authUser,
-        accessToken: (
-          payload as {
-            authUser: AuthUser;
-            accessToken: string;
-          }
-        ).accessToken,
+        authUser: payload as AuthUser,
       };
     default:
       return state;
@@ -143,30 +124,19 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         type: DispatchTypes.SET_AUTH_USER,
         payload: userCredential.user,
       });
-      const accessToken = await userCredential.user.getIdToken();
-      if (accessToken) {
-        dispatch({
-          type: DispatchTypes.SET_ACCESS_TOKEN,
-          payload: accessToken,
-        });
-      }
     }
   };
 
   const signInAsGuest = async () => {
     const userCredential = await authService.signInAsGuest();
     if (userCredential?.user) {
-      const accessToken = await userCredential.user.getIdToken();
       await userService.createUser(
         userCredential.user.uid,
         userCredential.user.email || '',
       );
       dispatch({
-        type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
-        payload: {
-          authUser: userCredential.user,
-          accessToken: accessToken,
-        },
+        type: DispatchTypes.SET_AUTH_USER,
+        payload: userCredential.user,
       });
     }
   };
@@ -174,17 +144,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (username: string, password: string) => {
     const userCredential = await authService.signUp(username, password);
     if (userCredential?.user) {
-      const accessToken = await userCredential.user.getIdToken();
       await userService.createUser(
         userCredential.user.uid,
         userCredential.user.email || '',
       );
       dispatch({
-        type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
-        payload: {
-          authUser: userCredential.user,
-          accessToken: accessToken,
-        },
+        type: DispatchTypes.SET_AUTH_USER,
+        payload: userCredential.user,
       });
     }
   };
@@ -198,6 +164,19 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     await authService.resetPassword(email);
   };
 
+  const getAccessToken = async () => {
+    try {
+      const user = auth().currentUser;
+      if (user) {
+        const accessToken = await user.getIdToken(true);
+        return accessToken;
+      }
+    } catch (error) {
+      log.error('Error getting access token: ', error);
+    }
+    return '';
+  };
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
       try {
@@ -205,21 +184,16 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
           log.setContext({
             uid: user.uid,
           });
-          // log.info('User signed in', user.uid);
           log.event('auth_sign_in');
-          const accessToken = await user.getIdToken();
           dispatch({
-            type: DispatchTypes.SET_AUTH_USER_ACCESS_TOKEN,
-            payload: {
-              authUser: user,
-              accessToken: accessToken,
-            },
+            type: DispatchTypes.SET_AUTH_USER,
+            payload: user,
           });
         } else {
           await signInAsGuest();
         }
       } catch (error) {
-        console.log('Error getting user: ', error);
+        log.error('Error getting user: ', error);
       }
     });
 
@@ -234,6 +208,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       signUp,
       signOut,
       resetPassword,
+      getAccessToken,
     }),
     [authState],
   );

@@ -81,8 +81,8 @@ android {
         applicationId "com.whiteof.translateus"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "1.1"
+        versionCode 20
+        versionName "1.2"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {

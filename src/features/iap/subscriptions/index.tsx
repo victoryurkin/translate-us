@@ -80,6 +80,7 @@ export const Subscriptions: React.FC = () => {
 
   const handlePurchase = async (pckg: PurchasesPackage) => {
     try {
+      log.event('started_purchase');
       setLoading(true);
       await Purchases.purchasePackage(pckg);
       log.event('purchased_package');
@@ -94,6 +95,7 @@ export const Subscriptions: React.FC = () => {
     try {
       setLoading(true);
       await Purchases.restorePurchases();
+      log.event('restored_purchase');
     } catch (error) {
       console.log('Error restoring purchase: ', error);
     } finally {

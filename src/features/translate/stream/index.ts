@@ -48,7 +48,7 @@ MicrophoneStream.init({
 const apiUrl = 'https://translate-stream-service-ocrtlpqp4q-uk.a.run.app';
 
 export const useStream = () => {
-  const { accessToken } = useAuth();
+  const { getAccessToken } = useAuth();
   const { setLoading } = useApp();
   const [job, setJob] = useState<Job>();
   const jobRef = useRef<Job>();
@@ -57,7 +57,7 @@ export const useStream = () => {
 
   const connect = async () => {
     log.debug('Connecting to socket.io server');
-    setLoading(true);
+    const accessToken = await getAccessToken();
     socketRef.current = io(apiUrl, {
       auth: {
         token: accessToken,
@@ -65,20 +65,18 @@ export const useStream = () => {
     });
 
     socketRef.current.on('connect_error', error => {
-      setLoading(false);
       log.error('Socket.io connect error: ', error);
-      console.log('Socket.io connect error: ', error);
+      // console.log('Socket.io connect error: ', error);
     });
 
     socketRef.current.on('connect', () => {
-      setLoading(false);
       log.debug('Socket.io connected: ', socketRef.current?.id);
-      console.log('Socket.io connected', socketRef.current?.id);
+      // console.log('Socket.io connected', socketRef.current?.id);
     });
 
     socketRef.current.on('disconnect', reason => {
       log.debug('Socket.io disconnected: ', reason);
-      console.log('Socket.io disconnected: ', reason);
+      // console.log('Socket.io disconnected: ', reason);
     });
 
     socketRef.current.on(IncomingEvents.TRANSCRIPTION_DATA, (data: string) => {
@@ -91,7 +89,7 @@ export const useStream = () => {
           setJob(updateJob);
         }
       } catch (err) {
-        console.log('Error on transcriptionData incoming event: ', err);
+        log.error('Error on transcriptionData incoming event: ', err);
       }
     });
 
@@ -118,7 +116,7 @@ export const useStream = () => {
           setJob(updateJob);
         }
       } catch (err) {
-        console.log('Error on translationData incoming event: ', err);
+        log.error('Error on translationData incoming event: ', err);
       }
     });
 
@@ -132,7 +130,7 @@ export const useStream = () => {
         Sound.setCategory('Playback');
         const sound = new Sound(path, '', error => {
           if (error) {
-            console.log('Error loading sound: ', error);
+            log.error('Error loading sound: ', error);
           } else {
             sound.play(async () => {
               sound.release();
@@ -150,7 +148,7 @@ export const useStream = () => {
           setJob(updateJob);
         }
       } catch (err) {
-        console.log('Transcription data is invalid: ', err);
+        log.error('Transcription data is invalid: ', err);
       }
     });
   };
@@ -180,23 +178,14 @@ export const useStream = () => {
   /***
    * OUTGOING EVENTS
    ***/
-
   const startRecording = async (
     sourceLanguage: string,
     targetLanguage: string,
   ) => {
     if (!socketRef.current || !socketRef.current.connected) {
+      log.event('start_recording_when_empty_socket');
       return;
     }
-
-    log.debug(
-      'Start recording: ',
-      socketRef.current.connected,
-      socketRef.current.active,
-      socketRef.current.disconnected,
-      socketRef.current.id,
-      socketRef.current.listeners,
-    );
 
     isRecording.current = true;
     socketRef.current.emit(OutgoingEvents.START_RECORDING, {
@@ -228,7 +217,7 @@ export const useStream = () => {
         const chunk = Buffer.from(data, 'base64');
         socketRef.current?.emit(OutgoingEvents.AUDIO_DATA, chunk);
       } catch (err) {
-        console.log('Error converting microphone stream: ', err);
+        log.error('Error converting microphone stream: ', err);
       }
     }
   });
@@ -263,6 +252,7 @@ export const useStream = () => {
       if (newAppState === 'active') {
         setLoading(true);
         await waitServerResponse();
+        setLoading(false);
         if (socketRef.current && !socketRef.current.connected) {
           socketRef.current.connect();
         }
