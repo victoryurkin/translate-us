@@ -63,8 +63,14 @@ export const Content: React.FC<Props> = ({
             colors={[colors.primary[700], colors.primary[500]]}
             style={styles.topBar}>
             <Text style={styles.header}>Translate Us</Text>
-            <Text style={styles.subheader}>application full access</Text>
           </LinearGradient>
+
+          <View style={styles.subheaderContainer}>
+            <Text style={styles.subheader}>
+              You have to subscribe or purchase one-day access in order to use
+              the app.
+            </Text>
+          </View>
 
           <Text style={styles.subscriptionsTitle}>Start 3-Day Free Trial</Text>
           <Text style={styles.subscriptionsSubtitle}>
@@ -203,13 +209,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginBottom: spacing.md,
+  },
+  subheaderContainer: {
+    marginTop: spacing.md,
   },
   subheader: {
-    fontSize: fontSize.md,
-    fontWeight: '500',
-    color: 'white',
+    marginHorizontal: spacing['2xl'],
     textAlign: 'center',
+    marginBottom: spacing['2xl'],
+    color: colors.secondary[600],
   },
 
   buttonsContainer: {
@@ -236,7 +244,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.lg,
     marginHorizontal: spacing['2xl'],
     marginBottom: spacing.xs,
-    marginTop: spacing.xl,
     textAlign: 'center',
     color: colors.primary[700],
   },
