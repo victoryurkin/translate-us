@@ -8,7 +8,9 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  Keyboard,
 } from 'react-native';
+import Fuse from 'fuse.js';
 import { colors, spacing, border, fontSize } from '@translate-us/styles';
 import {
   supportedLanguages,
@@ -21,6 +23,12 @@ import {
 } from '@translate-us/i18n';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { CheckIcon } from 'react-native-heroicons/outline';
+
+const options = {
+  includeScore: true,
+  threshold: 0.1,
+  keys: ['name', 'code'],
+};
 
 interface LanguageSelectorProps {
   languages?: SupportedLanguages | i18nSupportedLanguages;
@@ -39,6 +47,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   onChange,
   type,
 }) => {
+  const [isKeyboardVisible, setIsKeyboardVisible] = React.useState(false);
+
   const langs = React.useMemo(() => {
     return languages
       ? Object.keys(languages).map(key => languages[key])
@@ -51,14 +61,19 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
   const filteredLanguages = React.useMemo(() => {
     if (query.trim() !== '') {
-      return langs.filter(lang => lang.name.includes(query));
+      const fuse = new Fuse(langs, options);
+      const result = fuse.search(query);
+      return result.map(item => item.item);
     } else {
       return langs;
     }
   }, [query, langs]);
 
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
-  const snapPoints = React.useMemo(() => ['25%', '50%'], []);
+  const snapPoints = React.useMemo(
+    () => (isKeyboardVisible ? ['25%', '75%'] : ['25%', '50%']),
+    [isKeyboardVisible],
+  );
   const openLanguageSelector = React.useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -78,6 +93,25 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     },
     [onChange],
   );
+
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   return (
     <>
@@ -128,6 +162,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             value={query}
             onChangeText={text => setQuery(text)}
             placeholder={t('translate.search')}
+            onFocus={() => setIsKeyboardVisible(true)}
+            onBlur={() => setIsKeyboardVisible(false)}
           />
           <ScrollView>
             {filteredLanguages.map(lang => {
@@ -249,4 +285,5 @@ const styles = StyleSheet.create({
   handleStyle: {
     paddingVertical: 16,
   },
+  keyboardAvoidingViewContainer: {},
 });
