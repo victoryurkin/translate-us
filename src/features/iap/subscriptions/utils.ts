@@ -29,3 +29,13 @@ export const isActive = (active: ActiveEntitlement) => {
   }
   return false;
 };
+
+export const isPromo = (creationTime: string): boolean => {
+  // Check for creation date
+  const nowInMilliseconds = Date.now();
+  const createdAt = new Date(creationTime).getTime();
+  if (nowInMilliseconds - createdAt > 24 * 60 * 60 * 1000) {
+    return false;
+  }
+  return true;
+};

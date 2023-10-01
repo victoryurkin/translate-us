@@ -15,13 +15,14 @@ import Purchases, {
 import { Modal } from '@translate-us/components';
 import { useAuth } from '@translate-us/context';
 import { Content } from './content';
-import { isActive } from './utils';
+import { isActive, isPromo } from './utils';
 import { log } from '@translate-us/clients';
 
 export const Subscriptions: React.FC = () => {
   const [isOpen, toggleModal] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [offerings, setOfferings] = React.useState<PurchasesOfferings>();
+  const [isPromotion, setPromo] = React.useState(true);
   const { authUser } = useAuth();
 
   React.useEffect(() => {
@@ -107,6 +108,9 @@ export const Subscriptions: React.FC = () => {
     const stateChangeHandler = async (newAppState: string) => {
       if (newAppState === 'active') {
         loadCustomerInfo();
+        if (authUser) {
+          setPromo(isPromo(authUser.metadata.creationTime));
+        }
       }
     };
     const appStateSubscription = AppState.addEventListener(
@@ -118,8 +122,14 @@ export const Subscriptions: React.FC = () => {
     };
   }, []);
 
+  React.useEffect(() => {
+    if (authUser?.metadata?.creationTime) {
+      setPromo(isPromo(authUser.metadata.creationTime));
+    }
+  }, []);
+
   return (
-    <Modal isOpen={isOpen && !!offerings}>
+    <Modal isOpen={isOpen && !!offerings && !isPromotion}>
       {offerings && (
         <Content
           isLoading={isLoading}

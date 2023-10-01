@@ -16,6 +16,9 @@ export interface AuthUser {
   uid: string;
   email: string;
   isAnonymous: boolean;
+  metadata: {
+    creationTime: string;
+  };
 }
 
 export enum AuthErrorCodes {
