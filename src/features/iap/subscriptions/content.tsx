@@ -10,6 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { PurchasesOfferings, PurchasesPackage } from 'react-native-purchases';
 import { colors, fontSize, spacing } from '@translate-us/styles';
+import { useTranslation } from '@translate-us/i18n';
 import { Button } from './button';
 import { Link } from './link';
 import { PrivacyPolicy } from './privacy';
@@ -30,6 +31,7 @@ export const Content: React.FC<Props> = ({
   onPurchase,
   onRestore,
 }) => {
+  const { t } = useTranslation();
   const [legalContent, setLegalContent] = React.useState<'privacy' | 'terms'>();
   const translateAnim = React.useRef(new Animated.Value(0)).current;
   const animationLeft = React.useMemo(
@@ -62,19 +64,18 @@ export const Content: React.FC<Props> = ({
           <LinearGradient
             colors={[colors.primary[700], colors.primary[500]]}
             style={styles.topBar}>
-            <Text style={styles.header}>Translate Us</Text>
+            <Text style={styles.header}>{t('iap.title')}</Text>
           </LinearGradient>
 
           <View style={styles.subheaderContainer}>
-            <Text style={styles.subheader}>
-              You have to subscribe or purchase one-day access in order to use
-              the app.
-            </Text>
+            <Text style={styles.subheader}>{t('iap.description')}</Text>
           </View>
 
-          <Text style={styles.subscriptionsTitle}>Start 3-Day Free Trial</Text>
+          <Text style={styles.subscriptionsTitle}>
+            {t('iap.start_free_trial')}
+          </Text>
           <Text style={styles.subscriptionsSubtitle}>
-            with auto-renewable subscription plans
+            {t('iap.subscription_plans')}
           </Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
@@ -97,10 +98,10 @@ export const Content: React.FC<Props> = ({
               })}
           </View>
 
-          <Text style={styles.subscriptionsTitle}>or Pay as You Need</Text>
-          <Text style={styles.subscriptionsSubtitle}>
-            on-demand access (not auto-renewable)
+          <Text style={styles.subscriptionsTitle}>
+            {t('iap.pay_as_you_need')}
           </Text>
+          <Text style={styles.subscriptionsSubtitle}>{t('iap.on_demand')}</Text>
           <View style={styles.buttonsContainer}>
             {offerings.current?.availablePackages
               .filter(item => {
@@ -124,14 +125,14 @@ export const Content: React.FC<Props> = ({
 
           <View style={styles.linksContainer}>
             <Link
-              title="Restore"
+              title={t('iap.restore')}
               size={fontSize.md}
               color={colors.primary[600]}
               onPress={onRestore}
             />
             <View style={styles.bottomLinksContainer}>
               <Link
-                title="Terms of Use"
+                title={t('iap.terms')}
                 size={fontSize.md}
                 color={colors.secondary[600]}
                 onPress={() => {
@@ -140,7 +141,7 @@ export const Content: React.FC<Props> = ({
                 }}
               />
               <Link
-                title="Privacy Policy"
+                title={t('iap.privacy_policy')}
                 size={fontSize.md}
                 color={colors.secondary[600]}
                 onPress={() => {
@@ -152,9 +153,7 @@ export const Content: React.FC<Props> = ({
           </View>
 
           <View style={styles.descriptionContainer}>
-            <Text style={styles.description}>
-              Monthly or annual recurring billing, can be canceled anytime
-            </Text>
+            <Text style={styles.description}>{t('iap.recurring_billing')}</Text>
           </View>
         </View>
 
@@ -268,6 +267,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginHorizontal: spacing['2xl'],
+    paddingBottom: spacing['2xl'],
   },
   description: {
     flex: 1,

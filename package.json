@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios --simulator \"iPhone 14 Pro\"",
+    "ios": "react-native run-ios --simulator \"iPhone 15 Pro\"",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.7",
+    "@gorhom/portal": "^1.0.14",
     "@react-native-async-storage/async-storage": "^1.19.1",
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-firebase/analytics": "^18.4.0",

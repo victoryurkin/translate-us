@@ -7,7 +7,6 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Image,
   Keyboard,
 } from 'react-native';
 import Fuse from 'fuse.js';
@@ -24,67 +23,106 @@ import {
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { CheckIcon } from 'react-native-heroicons/outline';
 
+export interface LanguageSelectorProps {
+  languages?: SupportedLanguages | i18nSupportedLanguages;
+  selectedLanguage?: Language;
+  onSelect?: (lang: Language) => void;
+}
+
+/*** Provider ***/
+
+export interface LanguageSelectorState extends LanguageSelectorProps {
+  isOpen: boolean;
+  close: () => void;
+  toggleLanguageSelector: (props: LanguageSelectorProps) => void;
+}
+
+const initialState: LanguageSelectorState = {
+  isOpen: false,
+  close: () => {
+    console.warn('No LanguageSelector provider found');
+  },
+  toggleLanguageSelector: () => {
+    console.warn('No LanguageSelector provider found');
+  },
+};
+
+const LanguageSelectorContext = React.createContext(initialState);
+
+enum DispatchTypes {
+  SET_OPEN,
+  SET_PROPS,
+}
+
+interface DispatchProps {
+  type: DispatchTypes;
+  payload?: unknown;
+}
+
+const reducer = (
+  state: LanguageSelectorState,
+  { type, payload }: DispatchProps,
+) => {
+  switch (type) {
+    case DispatchTypes.SET_OPEN:
+      return {
+        ...state,
+        isOpen: payload as boolean,
+      };
+    case DispatchTypes.SET_PROPS:
+      const props = payload as LanguageSelectorProps;
+      return {
+        ...state,
+        ...props,
+      };
+    default:
+      return state;
+  }
+};
+
+export const LanguageSelectorProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
+  const [languageSelectorState, dispatch] = React.useReducer(
+    reducer,
+    initialState,
+  );
+
+  const providerValue = React.useMemo(() => {
+    const toggleLanguageSelector = (props: LanguageSelectorProps) => {
+      dispatch({ type: DispatchTypes.SET_PROPS, payload: props });
+      dispatch({ type: DispatchTypes.SET_OPEN, payload: true });
+    };
+    const close = () => {
+      dispatch({ type: DispatchTypes.SET_OPEN, payload: false });
+    };
+    return {
+      ...languageSelectorState,
+      toggleLanguageSelector,
+      close,
+    };
+  }, [languageSelectorState]);
+
+  return (
+    <LanguageSelectorContext.Provider value={providerValue}>
+      {children}
+    </LanguageSelectorContext.Provider>
+  );
+};
+
+export const useLanguageSelector = () =>
+  React.useContext(LanguageSelectorContext);
+
 const options = {
   includeScore: true,
   threshold: 0.1,
   keys: ['name', 'code'],
 };
 
-interface LanguageSelectorButtonProps {
-  language: Language;
-  onPress: () => void;
-  type: 'translate-source' | 'translate-target';
-}
+export const LanguageSelectorModal: React.FC = () => {
+  const { isOpen, languages, selectedLanguage, onSelect, close } =
+    useLanguageSelector();
 
-export const LanguageSelectorButton: React.FC<LanguageSelectorButtonProps> = ({
-  language,
-  type,
-  onPress,
-}) => {
-  const [isPressed, setPressed] = React.useState(false);
-  const { t } = useTranslation();
-
-  return (
-    <>
-      <View style={styles.languageContainer}>
-        {type === 'translate-target' && (
-          <Text style={styles.languageName}>{t(`lang.${language?.code}`)}</Text>
-        )}
-        <View style={styles.shadowContainer}>
-          <Pressable
-            style={{ ...styles.flagContainer }}
-            onPress={onPress}
-            onPressIn={() => setPressed(true)}
-            onPressOut={() => setPressed(false)}>
-            {language?.image && (
-              <Image
-                source={language.image}
-                style={isPressed ? styles.flagPressed : styles.flag}
-              />
-            )}
-          </Pressable>
-        </View>
-        {type === 'translate-source' && (
-          <Text style={styles.languageName}>{t(`lang.${language?.code}`)}</Text>
-        )}
-      </View>
-    </>
-  );
-};
-
-interface LanguageSelectorProps {
-  modalRef: React.RefObject<BottomSheetModal>;
-  languages?: SupportedLanguages | i18nSupportedLanguages;
-  language?: Language;
-  onChange: (lang: Language) => void;
-}
-
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
-  modalRef,
-  languages,
-  language,
-  onChange,
-}) => {
   const [isKeyboardVisible, setIsKeyboardVisible] = React.useState(false);
 
   const { t } = useTranslation();
@@ -114,29 +152,40 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     }
   }, [query, langs]);
 
+  const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
   const snapPoints = React.useMemo(
     () => (isKeyboardVisible ? ['25%', '75%'] : ['25%', '50%']),
     [isKeyboardVisible],
   );
 
+  React.useEffect(() => {
+    if (isOpen) {
+      bottomSheetModalRef.current?.present();
+    } else {
+      bottomSheetModalRef.current?.close();
+    }
+  }, [isOpen]);
+
   const handleSheetChanges = React.useCallback(
     (index: number) => {
       if (index === 0) {
-        modalRef.current?.close();
+        bottomSheetModalRef.current?.close();
+        close();
       }
       if (index === -1) {
         setQuery('');
       }
     },
-    [modalRef],
+    [close],
   );
 
   const handleLanguageChange = React.useCallback(
     (lang: Language) => {
-      modalRef.current?.close();
-      onChange(lang);
+      bottomSheetModalRef.current?.close();
+      onSelect && onSelect(lang);
+      close();
     },
-    [onChange, modalRef],
+    [onSelect, close],
   );
 
   React.useEffect(() => {
@@ -159,57 +208,56 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   }, []);
 
   return (
-    <>
-      <BottomSheetModal
-        backdropComponent={backdropProps => (
-          <BottomSheetBackdrop
-            {...backdropProps}
-            enableTouchThrough={true}
-            opacity={0.3}
-          />
-        )}
-        handleStyle={styles.handleStyle}
-        backgroundStyle={styles.bottomSheetModal}
-        ref={modalRef}
-        index={1}
-        snapPoints={snapPoints}
-        enableDismissOnClose
-        onChange={handleSheetChanges}>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.input}
-            value={query}
-            onChangeText={text => setQuery(text)}
-            placeholder={t('translate.search')}
-            onFocus={() => setIsKeyboardVisible(true)}
-            onBlur={() => setIsKeyboardVisible(false)}
-          />
-          <ScrollView>
-            {filteredLanguages.map(lang => {
-              return (
-                <Pressable
-                  key={lang.code}
-                  style={styles.row}
-                  onPress={() => handleLanguageChange(lang)}>
-                  <Text
-                    style={
-                      language?.code === lang.code
-                        ? styles.rowTextSelected
-                        : styles.rowText
-                    }>
-                    {t(`lang.${lang.code}`)}
-                  </Text>
-                  {language?.code === lang.code && (
-                    <CheckIcon width={16} height={16} />
-                  )}
-                </Pressable>
-              );
-            })}
-            <View style={styles.row} />
-          </ScrollView>
-        </View>
-      </BottomSheetModal>
-    </>
+    <BottomSheetModal
+      backdropComponent={backdropProps => (
+        <BottomSheetBackdrop
+          {...backdropProps}
+          enableTouchThrough={true}
+          opacity={0.3}
+        />
+      )}
+      handleStyle={styles.handleStyle}
+      backgroundStyle={styles.bottomSheetModal}
+      ref={bottomSheetModalRef}
+      index={1}
+      snapPoints={snapPoints}
+      enableDismissOnClose
+      onDismiss={() => close()}
+      onChange={handleSheetChanges}>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          value={query}
+          onChangeText={text => setQuery(text)}
+          placeholder={t('translate.search')}
+          onFocus={() => setIsKeyboardVisible(true)}
+          onBlur={() => setIsKeyboardVisible(false)}
+        />
+        <ScrollView>
+          {filteredLanguages.map(lang => {
+            return (
+              <Pressable
+                key={lang.code}
+                style={styles.row}
+                onPress={() => handleLanguageChange(lang)}>
+                <Text
+                  style={
+                    selectedLanguage?.code === lang.code
+                      ? styles.rowTextSelected
+                      : styles.rowText
+                  }>
+                  {t(`lang.${lang.code}`)}
+                </Text>
+                {selectedLanguage?.code === lang.code && (
+                  <CheckIcon width={16} height={16} />
+                )}
+              </Pressable>
+            );
+          })}
+          <View style={styles.row} />
+        </ScrollView>
+      </View>
+    </BottomSheetModal>
   );
 };
 
@@ -240,7 +288,6 @@ const styles = StyleSheet.create({
   flagContainer: {
     width: 80,
     height: 80,
-    backgroundColor: 'white',
     borderRadius: border.radius,
     overflow: 'hidden',
     display: 'flex',
@@ -251,12 +298,6 @@ const styles = StyleSheet.create({
     width: 114,
     height: 80,
     resizeMode: 'stretch',
-  },
-  flagPressed: {
-    width: 114,
-    height: 80,
-    resizeMode: 'stretch',
-    opacity: 0.7,
   },
   languageName: {
     fontSize: fontSize.md,

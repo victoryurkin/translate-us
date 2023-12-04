@@ -1,0 +1,127 @@
+{
+  "main": {
+    "title": "Przetłumacz Nas",
+    "subtitle": "tłumaczenie mowy"
+  },
+  "auth": {
+    "email": "E-mail",
+    "password": "Hasło",
+    "signin": "Zaloguj się",
+    "signup": "Zarejestruj się",
+    "signout": "Wyloguj się",
+    "forgot_password": "Zapomniałeś hasła?",
+    "confirm_password": "Potwierdź hasło",
+    "create_account": "Utwórz konto",
+    "signin_account": "Masz konto? Zaloguj się",
+    "otp": "Wprowadź kod jednorazowy",
+    "confirm_code": "Potwierdź kod",
+    "otp_error": "Wprowadź 6 znaków kodu",
+    "resend_otp": "Wyślij kod ponownie",
+    "passwords_dont_match": "Hasła nie pasują do siebie",
+    "password_error": "Minimum 6 znaków, przynajmniej 1 cyfra i 1 duża litera",
+    "errors": {
+      "email_password_not_found": "Adres e-mail lub hasło nie zostały znalezione",
+      "email_not_found": "Adres e-mail nie został znaleziony",
+      "email_already_used": "Adres e-mail już istnieje",
+      "email_max_length": "Adres e-mail może mieć maksymalnie 50 znaków",
+      "email_invalid": "Adres e-mail jest nieprawidłowy",
+      "email_required": "Wprowadź swój adres e-mail",
+      "password_required": "Wprowadź hasło",
+      "password_max_length": "Hasło może mieć maksymalnie 50 znaków",
+      "password_invalid": "Min. 6 znaków, jedna duża litera, jedna cyfra",
+      "confirm_password_required": "Potwierdź hasło"
+    },
+    "reset_success_title": "E-mail wysłany",
+    "reset_success_subtitle": "postępuj zgodnie z instrukcjami w e-mailu",
+    "reset": "Resetuj"
+  },
+  "generic_error": "Coś poszło nie tak. Proszę spróbuj ponownie później.",
+  "translate": {
+    "swipe": "przesuń",
+    "hold": "trzymaj",
+    "search": "Szukaj..."
+  },
+  "settings": {
+    "ui_language_title": "Język interfejsu",
+    "account_management": "Zarządzanie kontem",
+    "close_account": "Zamknij konto",
+    "close_account_confirm_dialog": {
+      "title": "Usuń konto",
+      "description": "Czy jesteś pewien? Chcesz usunąć swoje konto i się wylogować?",
+      "cancel": "Anuluj",
+      "delete": "Usuń",
+      "close": "Zamknij",
+      "error_title": "Coś poszło nie tak",
+      "error_description": "Proszę spróbuj ponownie później"
+    },
+    "terms_privacy": "Warunki i prywatność",
+    "watch_now": "Patrz teraz"
+  },
+  "price": "{{val, currency(USD)}}",
+  "privacy_policy": {
+    "title": "Polityka prywatności"
+  },
+  "terms_of_use": {
+    "title": "Warunki korzystania"
+  },
+  "products": {
+    "monthly_subscription": "Subskrypcja miesięczna",
+    "annual_subscription": "Subskrypcja roczna",
+    "one_day": "Dostęp na jeden dzień",
+    "year": "rok",
+    "month": "miesiąc",
+    "24_hours": "na 24 godziny"
+  },
+  "offline": "Proszę sprawdź swoje połączenie internetowe",
+  "iap": {
+    "title": "Translate Us",
+    "description": "Aby korzystać z aplikacji, musisz się zarejestrować lub zakupić dostęp na 1 dzień.",
+    "start_free_trial": "Rozpocznij 3-dniowy darmowy okres próbny",
+    "subscription_plans": "z automatycznymi planami abonamentowymi",
+    "pay_as_you_need": "lub Płacisz, kiedy potrzebujesz",
+    "on_demand": "dostęp na żądanie (nie automatycznie odnawialny)",
+    "recurring_billing": "Cykliczne rozliczanie miesięczne lub roczne, można anulować w dowolnym momencie",
+    "privacy_policy": "Polityka prywatności",
+    "terms": "Warunki korzystania",
+    "restore": "Przywróć"
+  },
+  "privacy": {
+    "title": "Polityka prywatności",
+    "title_01": "Kim Jesteśmy",
+    "paragraph_01": "WhiteOf Corporation to firma, która stworzyła aplikację Translate Us. Whiteof Corporation ma siedzibę w Boca Raton, na Florydzie. Organizacja ta głównie zajmuje się rozwojem oprogramowania.",
+    "title_02": "Zbieranie i Wykorzystywanie Informacji",
+    "paragraph_02": "Aplikacja Translate Us nie zbiera danych osobowych.",
+    "title_03": "Zmiany w Polityce Prywatności",
+    "paragraph_03": "Możemy czasami aktualizować naszą Politykę Prywatności. Dlatego zalecamy regularne sprawdzanie tej strony pod kątem zmian. Powiadomimy Cię o wszelkich zmianach, publikując nową Politykę Prywatności na tej stronie. Zmiany te obowiązują od razu po ich opublikowaniu na tej stronie.",
+    "title_04": "Skontaktuj się z nami",
+    "paragraph_04": "Jeśli masz pytania lub sugestie dotyczące naszej Polityki Prywatności, nie wahaj się skontaktować pod adresem info@whiteof.com.",
+    "whiteof": "WhiteOf Corporation"
+  },
+  "terms": {
+    "title": "Warunki korzystania",
+    "paragraph_01": "Proszę uważnie przeczytaj te Warunki Korzystania (\"Warunki\", \"Warunki Korzystania\") przed korzystaniem z aplikacji Translate Us (\"Usługa\") oferowanej przez WhiteOf Corporation (\"my\", \"nas\" lub \"nasza\").",
+    "paragraph_02": "Korzystanie z Usługi jest uzależnione od akceptacji i przestrzegania tych Warunków. Warunki te dotyczą wszystkich odwiedzających, użytkowników i innych osób, które mają dostęp do Usługi lub jej używają.",
+    "paragraph_03": "Korzystając z Usługi, zgadzasz się być związany tymi Warunkami. Jeśli nie zgadzasz się z którąkolwiek częścią Warunków, nie możesz korzystać z Usługi.",
+    "title_02": "Polityka Prywatności",
+    "paragraph_07": "WhiteOf Corporation szanuje prywatność użytkowników Usługi. Prosimy o zapoznanie się z Polityką Prywatności WhiteOf Corporation (dostępną tutaj: https://translateus.app/privacy-policy). Nie zbieramy danych osobowych. Korzystając z Usługi, wyrażasz zgodę na tę Politykę Prywatności.",
+    "title_03": "Własność Intelektualna",
+    "paragraph_08": "Zgadzasz się i potwierdzasz, że my i nasi licencjodawcy zachowujemy prawa własności intelektualnej wszelkiego rodzaju związane z Usługą, w tym odpowiednie prawa autorskie, znaki towarowe i inne prawa własności. Inne nazwy produktów i WhiteOf Corporation wymienione na Usłudze mogą być znakami towarowymi ich odpowiednich właścicieli. Zastrzegamy wszystkie prawa, które nie są wyraźnie przyznane Tobie na mocy niniejszej Umowy.",
+    "title_04": "Prawo Stosowane",
+    "paragraph_09": "Te Warunki podlegają i są interpretowane zgodnie z prawem Stanów Zjednoczonych, bez względu na jego przepisy dotyczące konfliktów prawnych.",
+    "paragraph_10": "Nasze niepodjęcie działań w celu egzekwowania jakiegokolwiek prawa lub postanowienia tych Warunków nie będzie uważane za zrzeczenie się tych praw. Jeśli którykolwiek przepis tych Warunków zostanie uznany za nieważny lub niewykonalny przez sąd, pozostałe przepisy Warunków pozostaną w mocy. Te Warunki stanowią kompletną umowę między nami w sprawie naszej Usługi i zastępują wszelkie wcześniejsze umowy, które mogliśmy mieć w sprawie Usługi.",
+    "title_05": "Ogólne Warunki",
+    "paragraph_11": "Jeśli któraś część tej Umowy zostanie uznana za nieważną lub niewykonalną, ta część Umowy będzie interpretowana zgodnie z obowiązującym prawem. Pozostałe części pozostaną w pełnej mocy i skuteczności. Brak działania ze strony WhiteOf Corporation w celu egzekwowania jakiegokolwiek postanowienia tej Umowy nie będzie uważane za zrzeczenie się naszego prawa do egzekwowania takiego postanowienia. Nasze prawa na mocy tej Umowy przetrwają wszelkie jej zakończenie.",
+    "paragraph_12": "Zgadzasz się, że każda sprawa związana z lub wynikająca z Twojej relacji z WhiteOf Corporation musi być wszczęta w ciągu JEDNEGO roku od dnia, w którym sprawa się pojawiła. W przeciwnym razie taka sprawa będzie trwale wyłączona.",
+    "paragraph_13": "Te Warunki Korzystania i Twoje korzystanie z Serwisu podlegają prawom Stanów Zjednoczonych Ameryki, bez względu na zasady konfliktu praw.",
+    "paragraph_14": "WhiteOf Corporation może przekazać lub delegować te Warunki Korzystania i/lub Politykę Prywatności WhiteOf Corporation, w całości lub części, każdej osobie lub podmiotowi w dowolnym czasie, z Twoją zgodą lub bez niej. Nie możesz przekazywać ani delegować żadnych praw lub obowiązków na mocy Warunków Korzystania lub Polityki Prywatności bez wcześniejszej pisemnej zgody WhiteOf Corporation, a każde nieuprawnione przekazanie i delegowanie przez Ciebie jest nieważne.",
+    "title_06": "Zmiany",
+    "paragraph_15": "Zastrzegamy sobie prawo, według własnego uznania, do modyfikowania lub zastępowania tych Warunków w dowolnym momencie.",
+    "paragraph_16": "Kontynuując dostęp lub korzystanie z naszej Usługi po wejściu w życie tych zmian, zgadzasz się być związany zmienionymi warunkami. Jeśli nie zgadzasz się z nowymi warunkami, prosimy o zaprzestanie korzystania z Usługi.",
+    "paragraph_17": "UZNANIE, ŻE PRZECZYTAŁEŚ TE WARUNKI KORZYSTANIA, ROZUMIESZ TE WARUNKI KORZYSTANIA I ZOSTANIESZ ZWIĄZANY TYMI WARUNKAMI I POSTANOWIENIAMI. PONADTO UZNANIE, ŻE TE WARUNKI KORZYSTANIA WRAZ Z POLITYKĄ PRYWATNOŚCI DOSTĘPNĄ POD ADRESEM https://translateus.app/privacy-policy STANOWIĄ PEŁNE I WYŁĄCZNE OŚWIADCZENIE O UMOWIE MIĘDZY NAMI I ŻE ZASTĘPUJĄ ONE WSZELKIE WCZEŚNIEJSZE PROPONOWANE LUB WCZEŚNIEJSZE UMOWY, WYRAŹNE LUB PISEMNE, ORAZ WSZYSTKIE INNE KOMUNIKATY MIĘDZY NAMI DOTYCZĄCE PRZEDMIOTU TEJ UMOWY.",
+    "title_07": "Skontaktuj się z nami",
+    "paragraph_18": "Jeśli masz pytania dotyczące tych Warunków, skontaktuj się z nami pod adresem info@whiteof.com."
+  },
+  "learn": {
+    "how_to_use": "Jak używać \"Translate Us\""
+  }
+}
