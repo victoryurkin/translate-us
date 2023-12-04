@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.md,
     color: colors.secondary[200],
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
     flex: 1,
   },
 });

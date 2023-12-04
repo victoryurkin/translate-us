@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { spacing } from '@translate-us/styles';
 import { useTranslation } from '@translate-us/i18n';
 
@@ -7,7 +7,7 @@ export const PrivacyPolicy = () => {
   const { t } = useTranslation();
 
   return (
-    <View style={styles.content}>
+    <ScrollView style={styles.content}>
       <Text style={styles.strong}>{t('privacy.title_01')}</Text>
       <Text style={styles.paragraph}>{t('privacy.paragraph_01')}</Text>
 
@@ -21,7 +21,8 @@ export const PrivacyPolicy = () => {
       <Text style={styles.paragraph}>{t('privacy.paragraph_04')}</Text>
 
       <Text style={styles.paragraph}>{t('privacy.whiteof')}</Text>
-    </View>
+      <View style={styles.bottom} />
+    </ScrollView>
   );
 };
 
@@ -35,5 +36,8 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     marginVertical: spacing.sm,
+  },
+  bottom: {
+    height: 80,
   },
 });
