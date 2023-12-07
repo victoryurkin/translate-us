@@ -2,6 +2,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Animated } from 'react-native';
 import { XMarkIcon } from 'react-native-heroicons/solid';
+import { spacing } from '@translate-us/styles';
 
 interface CloseButtonProps {
   isVisible: boolean;
@@ -88,5 +89,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: spacing['2xl'],
   },
 });

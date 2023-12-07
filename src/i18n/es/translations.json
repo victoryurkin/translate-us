@@ -122,6 +122,9 @@
     "paragraph_18": "Si tiene alguna pregunta sobre estos Términos, por favor contáctenos en info@whiteof.com."
   },
   "learn": {
-    "how_to_use": "Cómo utilizar \"Translate Us\""
+    "how_to_use": "Cómo utilizar \"Translate Us\"",
+    "instruction_01": "1. Mantenga presionada, deslice y hable",
+    "instruction_02": "2. Suéltalo cuando hayas terminado",
+    "instruction_03": "3. Desliza hacia arriba o hacia abajo según los idiomas seleccionados"
   }
 }

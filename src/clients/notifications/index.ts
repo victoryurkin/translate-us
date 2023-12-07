@@ -18,4 +18,5 @@ export const notifications = new NotificationsService();
 export enum AppEvents {
   AUTH_SIGN_IN = 'auth.sign_in',
   AUTH_SIGN_OUT = 'auth.sign_out',
+  LEARN_PLAY = 'learn.play',
 }

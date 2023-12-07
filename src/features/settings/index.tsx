@@ -25,6 +25,7 @@ import {
 } from '@translate-us/i18n';
 import { useNavigation } from '@translate-us/hooks';
 import { useLanguageSelector } from '@translate-us/components';
+import { notifications, AppEvents } from '@translate-us/clients';
 
 interface SettingsProps {
   onClose: () => void;
@@ -71,7 +72,10 @@ export const Settings: FC<SettingsProps> = ({ onClose }) => {
             sectionTitle={t('learn.how_to_use')}
             icon={PlayIcon}
             title={t('settings.watch_now')}
-            onPress={() => {}}
+            onPress={() => {
+              onClose();
+              notifications.emit(AppEvents.LEARN_PLAY);
+            }}
           />
 
           <ListMenu

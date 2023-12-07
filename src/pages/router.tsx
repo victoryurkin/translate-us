@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { Pressable, Text } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -111,9 +110,9 @@ export const Router = () => {
           </Stack.Navigator>
         </NavigationContainer>
       )}
-      {/* {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
+      {!isLoading && !!authUser && authUser.uid !== uidNoIap && (
         <Subscriptions />
-      )} */}
+      )}
       <Netinfo />
     </React.Fragment>
   );

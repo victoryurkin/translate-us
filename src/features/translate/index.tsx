@@ -22,7 +22,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
 import { PrivacyPolicy, TermsOfUse } from './components';
-// import { Learn } from './components';
+import { Learn } from './components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Layout } from '@translate-us/components';
 // import { useNavigation } from '@translate-us/hooks';
@@ -44,7 +44,7 @@ export const Translate: React.FC = () => {
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
   const [isPrivacyOpen, togglePrivacy] = React.useState(false);
   const [isTermsOpen, toggleTerms] = React.useState(false);
-  // const [isLearnPlaying, toggleLearn] = React.useState(false);
+  const [isLearnPlaying, toggleLearn] = React.useState(false);
   const sourceModalRef = React.useRef<BottomSheetModal>(null);
   const targetModalRef = React.useRef<BottomSheetModal>(null);
 
@@ -197,7 +197,7 @@ export const Translate: React.FC = () => {
         onClose={() => togglePrivacy(false)}
       />
 
-      {/* <Learn isPlaying={isLearnPlaying} onStop={() => toggleLearn(false)} /> */}
+      <Learn isPlaying={isLearnPlaying} onStop={() => toggleLearn(false)} />
     </>
   );
 };
