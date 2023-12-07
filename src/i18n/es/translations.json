@@ -1,48 +1,130 @@
 {
   "main": {
-    "title": "Translate Us",
-    "subtitle": "traducción del discurso"
+      "title": "Traducirnos",
+      "subtitle": "traducción de voz"
   },
   "auth": {
-    "email": "Email",
-    "password": "Contraseña",
-    "signin": "Iniciar sesión",
-    "signup": "Inscribirse",
-    "signout": "Desconectar",
-    "forgot_password": "¿Has olvidado tu contraseña?",
-    "confirm_password": "Confirmar Contraseña",
-    "create_account": "Crea una cuenta",
-    "signin_account": "¿Tener una cuenta? Iniciar sesión",
-    "otp": "Ingrese el código de un solo uso",
-    "confirm_code": "Confirma código",
-    "otp_error": "Introduzca el código de 6 caracteres",
-    "resend_otp": "Reenviar OTP",
-    "passwords_dont_match": "Las contraseñas no coinciden",
-    "password_error": "Mínimo 6 caracteres, al menos 1 número y 1 letra mayúscula",
-    "errors": {
-      "email_password_not_found": "Dirección de correo electrónico o contraseña no encontrada",
-      "email_not_found": "Dirección de correo electrónico no encontrado",
-      "email_already_used": "La dirección de correo ya existe",
-      "email_max_length": "El correo electrónico debe tener como máximo 50 caracteres.",
-      "email_invalid": "Dirección de correo electrónico es inválida",
-      "email_required": "Introduce tu dirección de correo electrónico",
-      "password_required": "Ingresa tu contraseña",
-      "password_max_length": "La contraseña debe tener como máximo 50 caracteres.",
-      "password_invalid": "Mínimo 6 caracteres, una mayúscula y un número.",
-      "confirm_password_required": "Confirmar la contraseña"
-    },
-    "reset_success_title": "Email enviado",
-    "reset_success_subtitle": "siga las instrucciones en el correo electrónico",
-    "reset": "Reiniciar"
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "signin": "Iniciar sesión",
+      "signup": "Registrarse",
+      "signout": "Cerrar sesión",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "confirm_password": "Confirmar contraseña",
+      "create_account": "Crear una cuenta",
+      "signin_account": "¿Ya tienes una cuenta? Iniciar sesión",
+      "otp": "Ingrese el código de un solo uso",
+      "confirm_code": "Confirmar código",
+      "otp_error": "Ingrese un código de 6 caracteres",
+      "resend_otp": "Reenviar OTP",
+      "passwords_dont_match": "Las contraseñas no coinciden",
+      "password_error": "Mínimo 6 caracteres, al menos 1 número y 1 letra mayúscula",
+      "errors": {
+          "email_password_not_found": "Dirección de correo electrónico o contraseña no encontrada",
+          "email_not_found": "Dirección de correo electrónico no encontrada",
+          "email_already_used": "La dirección de correo electrónico ya existe",
+          "email_max_length": "El correo electrónico debe tener como máximo 50 caracteres",
+          "email_invalid": "La dirección de correo electrónico no es válida",
+          "email_required": "Ingrese su dirección de correo electrónico",
+          "password_required": "Ingrese su contraseña",
+          "password_max_length": "La contraseña debe tener como máximo 50 caracteres",
+          "password_invalid": "Mínimo 6 caracteres, una mayúscula, un número",
+          "confirm_password_required": "Confirme su contraseña"
+      },
+      "reset_success_title": "Correo electrónico enviado",
+      "reset_success_subtitle": "sigua las instrucciones en el correo electrónico",
+      "reset": "Restablecer"
   },
-  "generic_error": "Algo salió mal. Por favor, inténtelo de nuevo más tarde.",
+  "generic_error": "Algo salió mal. Por favor, inténtalo de nuevo más tarde.",
   "translate": {
-    "swipe": "golpe fuerte",
-    "hold": "sostener",
-    "search": "Buscar..."
+      "swipe": "deslizar",
+      "hold": "sostener",
+      "search": "Buscar..."
   },
   "settings": {
-    "ui_language_title": "Lenguaje de interfaz"
+      "ui_language_title": "Idioma de la interfaz",
+      "account_management": "Gestión de la cuenta",
+      "close_account": "Cerrar cuenta",
+      "close_account_confirm_dialog": {
+          "title": "Eliminar cuenta",
+          "description": "¿Estás seguro? ¿Deseas eliminar tu cuenta y cerrar sesión?",
+          "cancel": "Cancelar",
+          "delete": "Eliminar",
+          "close": "Cerrar",
+          "error_title": "Algo salió mal",
+          "error_description": "Por favor, inténtalo de nuevo más tarde"
+      },
+      "terms_privacy": "Términos y privacidad",
+      "watch_now": "Ver ahora"  
   },
-  "price": "{{val, currency(USD)}}"
+  "price": "{{val, currency(USD)}}",
+  "privacy_policy": {
+      "title": "Política de privacidad"
+  },
+  "terms_of_use": {
+      "title": "Términos de uso"
+  },
+  "products": {
+      "monthly_subscription": "Suscripción mensual",
+      "annual_subscription": "Suscripción anual",
+      "one_day": "Acceso de un día",
+      "year": "año",
+      "month": "mes",
+      "24_hours": "por 24 horas"
+  },
+  "offline": "Por favor, verifica tu conexión a internet",
+  "iap": {
+    "title": "Translate Us",
+    "description": "Debes suscribirte o comprar acceso de un día para usar la aplicación.",
+    "start_free_trial": "Comenzar prueba gratuita de 3 días",
+    "subscription_plans": "con planes de suscripción renovables automáticamente",
+    "pay_as_you_need": "o Pagar según lo necesites",
+    "on_demand": "Acceso a pedido (no renovable automáticamente)",
+    "recurring_billing": "Facturación mensual o anual renovable, se puede cancelar en cualquier momento",
+    "privacy_policy": "Política de privacidad",
+    "terms": "Términos de uso",
+    "restore": "Restaurar"
+  },
+  "privacy": {
+    "title": "Política de privacidad",
+    "title_01": "Quiénes Somos",
+    "paragraph_01": "WhiteOf Corporation es la empresa que creó la aplicación Translate Us. Whiteof Corporation está ubicada en Boca Ratón, Florida. Esta organización opera principalmente en el desarrollo de software.",
+    "title_02": "Recopilación y Uso de la Información",
+    "paragraph_02": "La aplicación Translate Us no recopila datos personales.",
+    "title_03": "Cambios en esta Política de Privacidad",
+    "paragraph_03": "Podemos actualizar nuestra Política de Privacidad de vez en cuando. Por lo tanto, se recomienda que revise esta página periódicamente para conocer los cambios. Le notificaremos cualquier cambio mediante la publicación de la nueva Política de Privacidad en esta página. Estos cambios son efectivos inmediatamente después de su publicación en esta página.",
+    "title_04": "Contáctenos",
+    "paragraph_04": "Si tiene alguna pregunta o sugerencia acerca de nuestra Política de Privacidad, no dude en contactarnos en info@whiteof.com.",
+    "whiteof": "WhiteOf Corporation"
+  },
+  "terms": {
+    "title": "Condiciones de uso",
+    "paragraph_01": "Lea atentamente estos Términos de Uso (\"Términos\", \"Términos de Uso\") antes de utilizar la aplicación Translate Us (el \"Servicio\") operada por WhiteOf Corporation (\"nosotros\", \"nos\" o \"nuestro\").",
+    "paragraph_02": "Su acceso y uso del Servicio están condicionados a su aceptación y cumplimiento de estos Términos. Estos Términos se aplican a todos los visitantes, usuarios y otras personas que accedan o utilicen el Servicio.",
+    "paragraph_03": "Al acceder o utilizar el Servicio, acepta quedar vinculado por estos Términos. Si no está de acuerdo con alguna parte de los términos, no podrá acceder al Servicio.",
+    "title_02": "Política de Privacidad",
+    "paragraph_07": "WhiteOf Corporation respeta la privacidad de sus usuarios del Servicio. Consulte la Política de Privacidad de WhiteOf Corporation (disponible aquí: https://translateus.app/privacy-policy). No recopilamos datos personales. Al acceder o utilizar el Servicio, usted indica su acuerdo con esta Política de Privacidad.",
+    "title_03": "Propiedad Intelectual",
+    "paragraph_08": "Reconoce y acepta que nosotros y nuestros licenciantes conservamos la propiedad de todos los derechos de propiedad intelectual de cualquier tipo relacionados con el Servicio, incluidos los derechos de autor, marcas comerciales y otros derechos de propiedad aplicables. Otros nombres de productos y de WhiteOf Corporation que se mencionan en el Servicio pueden ser marcas comerciales de sus respectivos propietarios. Nos reservamos todos los derechos que no se le otorgan expresamente en virtud de este Acuerdo.",
+    "title_04": "Ley Aplicable",
+    "paragraph_09": "Estos Términos se regirán e interpretarán de acuerdo con las leyes de los Estados Unidos, sin tener en cuenta sus disposiciones sobre conflictos de leyes.",
+    "paragraph_10": "Nuestra falta de aplicación de cualquier derecho o disposición de estos Términos no se considerará una renuncia de esos derechos. Si alguna disposición de estos Términos es declarada inválida o inaplicable por un tribunal, las disposiciones restantes de estos Términos seguirán en vigor. Estos Términos constituyen el acuerdo completo entre nosotros con respecto a nuestro Servicio y reemplazan y sustituyen cualquier acuerdo previo que pudiéramos tener entre nosotros con respecto al Servicio.",
+    "title_05": "Términos Generales",
+    "paragraph_11": "Si alguna parte de este Acuerdo se considera inválida o inaplicable, esa parte del Acuerdo se interpretará de conformidad con la ley aplicable. Las partes restantes seguirán en pleno vigor y efecto. Cualquier falta de WhiteOf Corporation para hacer cumplir cualquier disposición de este Acuerdo no se considerará una renuncia a nuestro derecho de hacer cumplir dicha disposición. Nuestros derechos en virtud de este Acuerdo sobrevivirán a cualquier terminación de este Acuerdo.",
+    "paragraph_12": "Usted acepta que cualquier causa de acción relacionada con su relación con WhiteOf Corporation debe comenzar dentro de UN año después de que la causa de acción se origine. De lo contrario, dicha causa de acción quedará permanentemente excluida.",
+    "paragraph_13": "Estos Términos de Uso y su uso del Sitio están regulados por las leyes de los Estados Unidos de América, sin tener en cuenta los principios de conflicto de leyes.",
+    "paragraph_14": "WhiteOf Corporation puede ceder o delegar estos Términos de Servicio y/o la Política de Privacidad de WhiteOf Corporation, en su totalidad o en parte, a cualquier persona o entidad en cualquier momento, con o sin su consentimiento. Usted no puede ceder ni delegar ningún derecho u obligación en virtud de los Términos de Servicio o la Política de Privacidad sin el consentimiento previo por escrito de WhiteOf Corporation, y cualquier cesión y delegación no autorizadas por usted serán nulas.",
+    "title_06": "Cambios",
+    "paragraph_15": "Nos reservamos el derecho, a nuestra sola discreción, de modificar o reemplazar estos Términos en cualquier momento.",
+    "paragraph_16": "Al seguir accediendo o utilizando nuestro Servicio después de que esas revisiones entren en vigor, acepta quedar vinculado por los términos revisados. Si no está de acuerdo con los nuevos términos, por favor deje de utilizar el Servicio.",
+    "paragraph_17": "RECONOCE QUE HA LEÍDO ESTOS TÉRMINOS DE USO, COMPRENDE LOS TÉRMINOS DE USO Y QUEDARÁ VINCULADO POR ESTOS TÉRMINOS Y CONDICIONES. ADEMÁS, RECONOCE QUE ESTOS TÉRMINOS DE USO, JUNTO CON LA POLÍTICA DE PRIVACIDAD EN https://translateus.app/privacy-policy, REPRESENTAN LA DECLARACIÓN COMPLETA Y EXCLUSIVA DEL ACUERDO ENTRE NOSOTROS Y QUE SUSTITUYEN CUALQUIER PROPUESTA O ACUERDO PREVIO, ORAL O ESCRITO, Y CUALQUIER OTRA COMUNICACIÓN ENTRE NOSOTROS RELACIONADA CON EL TEMA DE ESTE ACUERDO.",
+    "title_07": "Contáctenos",
+    "paragraph_18": "Si tiene alguna pregunta sobre estos Términos, por favor contáctenos en info@whiteof.com."
+  },
+  "learn": {
+    "how_to_use": "Cómo utilizar \"Translate Us\"",
+    "instruction_01": "1. Mantenga presionada, deslice y hable",
+    "instruction_02": "2. Suéltalo cuando hayas terminado",
+    "instruction_03": "3. Desliza hacia arriba o hacia abajo según los idiomas seleccionados"
+  }
 }

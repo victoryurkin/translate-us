@@ -1,64 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { spacing } from '@translate-us/styles';
+import { useTranslation } from '@translate-us/i18n';
 
 export const PrivacyPolicy = () => {
+  const { t } = useTranslation();
+
   return (
-    <View style={styles.content}>
-      <Text style={styles.strong}>Who We Are</Text>
-      <Text style={styles.paragraph}>
-        WhiteOf Corporation is the company who created the Moneydad. Whiteof
-        Corporation is located in Brooklyn, New York. This organization
-        primarily operates in the Software Development.
-      </Text>
-      <Text style={styles.strong}>Information Collection and Use</Text>
-      <Text style={styles.paragraph}>
-        We should notify you that the app will collect some personal data. They
-        are user’s name and the phone number. We assure that this private
-        information won’t be used in commercial purposes and won’t be given to
-        third party.
-      </Text>
+    <ScrollView style={styles.content}>
+      <Text style={styles.strong}>{t('privacy.title_01')}</Text>
+      <Text style={styles.paragraph}>{t('privacy.paragraph_01')}</Text>
 
-      <Text style={styles.strong}>Why We Collect Personal Data</Text>
-      <Text style={styles.paragraph}>
-        The work of the app "Moneydad" requires some personal data. This data
-        will be used to help a user to restore access to the application. Phone
-        number is used by the app in order to remind passcode or nickname using
-        SMS service.
-      </Text>
+      <Text style={styles.strong}>{t('privacy.title_02')}</Text>
+      <Text style={styles.paragraph}>{t('privacy.paragraph_02')}</Text>
 
-      <Text style={styles.strong}>Cookies</Text>
-      <Text style={styles.paragraph}>
-        Cookies are files with small amount of data that is commonly used an
-        anonymous unique identifier. These are sent to your browser from the
-        website that you visit and are stored on your device internal memory.
-        Moneydad application does not use the "cookies" explicitly.
-      </Text>
+      <Text style={styles.strong}>{t('privacy.title_03')}</Text>
+      <Text style={styles.paragraph}>{t('privacy.paragraph_03')}</Text>
 
-      <Text style={styles.strong}>Security</Text>
-      <Text style={styles.paragraph}>
-        We value your trust in providing us your Personal Information, thus we
-        are striving to use commercially acceptable means of protecting it. But
-        remember that no method of transmission over the internet, or method of
-        electronic storage is 100% secure and reliable, and we cannot guarantee
-        its absolute security.
-      </Text>
+      <Text style={styles.strong}>{t('privacy.title_04')}</Text>
+      <Text style={styles.paragraph}>{t('privacy.paragraph_04')}</Text>
 
-      <Text style={styles.strong}>Changes to This Privacy Policy</Text>
-      <Text style={styles.paragraph}>
-        We may update our Privacy Policy from time to time. Thus, you are
-        advised to review this page periodically for any changes. We will notify
-        you of any changes by posting the new Privacy Policy on this page. These
-        changes are effective immediately after they are posted on this page.
-      </Text>
-
-      <Text style={styles.strong}>Contact Us</Text>
-      <Text style={styles.paragraph}>
-        If you have any questions or suggestions about our Privacy Policy, do
-        not hesitate to info@whiteof.com.
-      </Text>
-      <Text style={styles.paragraph}>WhiteOf Corporation</Text>
-    </View>
+      <Text style={styles.paragraph}>{t('privacy.whiteof')}</Text>
+      <View style={styles.bottom} />
+    </ScrollView>
   );
 };
 
@@ -72,5 +36,8 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     marginVertical: spacing.sm,
+  },
+  bottom: {
+    height: 80,
   },
 });

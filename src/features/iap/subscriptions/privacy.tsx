@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ChevronLeftIcon } from 'react-native-heroicons/solid';
 import { colors, fontSize, spacing } from '@translate-us/styles';
 import { PrivacyPolicy as PrivacyPolicyComponent } from '@translate-us/components';
+import { useTranslation } from '@translate-us/i18n';
 
 interface Props {
   onBack: () => void;
@@ -11,6 +12,7 @@ interface Props {
 
 export const PrivacyPolicy: React.FC<Props> = ({ onBack }) => {
   const [isPressed, setPressed] = React.useState(false);
+  const { t } = useTranslation();
 
   return (
     <View>
@@ -27,7 +29,7 @@ export const PrivacyPolicy: React.FC<Props> = ({ onBack }) => {
           onPress={onBack}>
           <ChevronLeftIcon color="white" />
         </Pressable>
-        <Text style={styles.header}>Privacy Policy</Text>
+        <Text style={styles.header}>{t('iap.privacy_policy')}</Text>
       </LinearGradient>
       <PrivacyPolicyComponent />
     </View>

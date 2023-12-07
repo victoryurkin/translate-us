@@ -53,7 +53,9 @@
       "close": "Close",
       "error_title": "Something went wrong",
       "error_description": "Please, try again later"
-    }
+    },
+    "terms_privacy": "Terms & Privacy",
+    "watch_now": "Watch Now"
   },
   "price": "{{val, currency(USD)}}",
   "privacy_policy": {
@@ -70,5 +72,59 @@
     "month": "month",
     "24_hours": "for 24 hours"
   },
-  "offline": "Please, check your internet connection"
+  "offline": "Please, check your internet connection",
+  "iap": {
+    "title": "Translate Us",
+    "description": "You have to subscribe or purchase one-day access in order to use the app.",
+    "start_free_trial": "Start 3-Day Free Trial",
+    "subscription_plans": "with auto-renewing subscription plans",
+    "pay_as_you_need": "or Pay as You Need",
+    "on_demand": "on-demand access (not auto-renewable)",
+    "recurring_billing": "Monthly or annual recurring billing, can be canceled anytime",
+    "privacy_policy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "restore": "Restore"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "title_01": "Who We Are",
+    "paragraph_01": "WhiteOf Corporation is the company who created the Translate Us application. Whiteof Corporation is located in Boca Raton, Florida. This organization primarily operates in the Software Development.",
+    "title_02": "Information Collection and Use",
+    "paragraph_02": "The Translate Us application does not collect personal data.",
+    "title_03": "Changes to This Privacy Policy",
+    "paragraph_03": "We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately after they are posted on this page.",
+    "title_04": "Contact Us",
+    "paragraph_04": "If you have any questions or suggestions about our Privacy Policy, do not hesitate to info@whiteof.com.",
+    "whiteof": "WhiteOf Corporation"
+  },
+  "terms": {
+    "title": "Terms Of Use",
+    "paragraph_01": "Please read these Terms of Use (\"Terms\", \"Terms of Use\") carefully before using the Translate Us application (the \"Service\") operated by WhiteOf Corporation (\"us\", \"we\", or \"our\").",
+    "paragraph_02": "Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.",
+    "paragraph_03": "By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.",
+    "title_02": "Privacy Policy",
+    "paragraph_07": "WhiteOf Corporation respects the privacy of its Service users. Please refer to WhiteOf Corporation’s Privacy Policy (found here: https://translateus.app/privacy-policy). We do not collect personal data. When you access or use the Service, you signify your agreement to this Privacy Policy.",
+    "title_03": "Intellectual Property",
+    "paragraph_08": "You acknowledge and agree that we and our licensors retain ownership of all intellectual property rights of any kind related to the Service, including applicable copyrights, trademarks and other proprietary rights. Other product and WhiteOf Corporation names that are mentioned on the Service may be trademarks of their respective owners. We reserve all rights that are not expressly granted to you under this Agreement.",
+    "title_04": "Governing Law",
+    "paragraph_09": "These Terms shall be governed and construed in accordance with the laws of United States, without regard to its conflict of law provisions.",
+    "paragraph_10": "Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.",
+    "title_05": "General Terms",
+    "paragraph_11": "If any part of this Agreement is held invalid or unenforceable, that portion of the Agreement will be construed consistent with applicable law. The remaining portions will remain in full force and effect. Any failure on the part of WhiteOf Corporation to enforce any provision of this Agreement will not be considered a waiver of our right to enforce such provision. Our rights under this Agreement will survive any termination of this Agreement.",
+    "paragraph_12": "You agree that any cause of action related to or arising out of your relationship with WhiteOf Corporation must commence within ONE year after the cause of action accrues. Otherwise, such cause of action is permanently barred.",
+    "paragraph_13": "These Terms of Use and your use of the Site are governed by the laws of the United States of America, without regard to conflicts of law principles.",
+    "paragraph_14": "WhiteOf Corporation may assign or delegate these Terms of Service and/or WhiteOf Corporation’s Privacy Policy, in whole or in part, to any person or entity at any time with or without your consent. You may not assign or delegate any rights or obligations under the Terms of Service or Privacy Policy without WhiteOf Corporation’s prior written consent, and any unauthorized assignment and delegation by you is void.",
+    "title_06": "Changes",
+    "paragraph_15": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time.",
+    "paragraph_16": "By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.",
+    "paragraph_17": "YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF USE, UNDERSTAND THE TERMS OF USE, AND WILL BE BOUND BY THESE TERMS AND CONDITIONS. YOU FURTHER ACKNOWLEDGE THAT THESE TERMS OF USE TOGETHER WITH THE PRIVACY POLICY AT https://translateus.app/privacy-policy REPRESENT THE COMPLETE AND EXCLUSIVE STATEMENT OF THE AGREEMENT BETWEEN US AND THAT IT SUPERSEDES ANY PROPOSAL OR PRIOR AGREEMENT ORAL OR WRITTEN, AND ANY OTHER COMMUNICATIONS BETWEEN US RELATING TO THE SUBJECT MATTER OF THIS AGREEMENT.",
+    "title_07": "Contact Us",
+    "paragraph_18": "If you have any questions about these Terms, please contact us at info@whiteof.com."
+  },
+  "learn": {
+    "how_to_use": "How to use \"Translate Us\"",
+    "instruction_01": "1. Press, hold, swipe & talk",
+    "instruction_02": "2. Release when your are done",
+    "instruction_03": "3. Swipe top or bottom based on languages selected"
+  }
 }

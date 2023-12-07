@@ -6,18 +6,25 @@ import {
   ScrollView,
   Text,
   ActivityIndicator,
-  // Pressable,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Layout } from '@translate-us/components';
 import { useUser } from '@translate-us/context';
 import { border, colors, fontSize, spacing } from '@translate-us/styles';
-import { ButtonTranslate, LanguageSelector } from './components';
+import {
+  ButtonTranslate,
+  LanguageSelector,
+  LanguageSelectorButton,
+} from './components';
 import { Language, supportedLanguages } from '@translate-us/constants';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
 import { useStream } from './stream';
 import { PrivacyPolicy, TermsOfUse } from './components';
+import { Learn } from './components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Layout } from '@translate-us/components';
 // import { useNavigation } from '@translate-us/hooks';
 // import { QuestionMarkCircleIcon } from 'react-native-heroicons/outline';
 
@@ -37,6 +44,9 @@ export const Translate: React.FC = () => {
   const [targetLanguage, setTargetLanguage] = React.useState<Language>();
   const [isPrivacyOpen, togglePrivacy] = React.useState(false);
   const [isTermsOpen, toggleTerms] = React.useState(false);
+  const [isLearnPlaying, toggleLearn] = React.useState(false);
+  const sourceModalRef = React.useRef<BottomSheetModal>(null);
+  const targetModalRef = React.useRef<BottomSheetModal>(null);
 
   React.useEffect(() => {
     if (user!.defaultSourceLanguage) {
@@ -78,23 +88,24 @@ export const Translate: React.FC = () => {
 
   return (
     <>
-      <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          <Layout>
+      <Layout>
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
             <View style={styles.container}>
               <LinearGradient
                 colors={[colors.primary[600], colors.primary[700]]}
-                style={styles.topBar}>
-                {/* <Pressable onPress={() => navigate('Support')}>
-                  <QuestionMarkCircleIcon />
-                </Pressable> */}
-              </LinearGradient>
+                style={styles.topBar}
+              />
               <View style={styles.absoluteContainer}>
-                <LanguageSelector
-                  language={sourceLanguage}
-                  onChange={(lang: Language) => setSourceLanguage(lang)}
-                  type="translate-source"
-                />
+                <View style={styles.languageContainer}>
+                  {sourceLanguage && (
+                    <LanguageSelectorButton
+                      language={sourceLanguage}
+                      onPress={() => sourceModalRef.current?.present()}
+                      type="translate-source"
+                    />
+                  )}
+                </View>
               </View>
               <View style={styles.contentTopContainer}>
                 <ScrollView contentContainerStyle={styles.content}>
@@ -152,25 +163,41 @@ export const Translate: React.FC = () => {
                 </ScrollView>
               </View>
               <View style={styles.absoluteContainer}>
-                <LanguageSelector
-                  language={targetLanguage}
-                  onChange={(lang: Language) => setTargetLanguage(lang)}
-                  type="translate-target"
-                />
+                <View style={styles.languageContainer}>
+                  {targetLanguage && (
+                    <LanguageSelectorButton
+                      language={targetLanguage}
+                      onPress={() => targetModalRef.current?.present()}
+                      type="translate-target"
+                    />
+                  )}
+                </View>
               </View>
               <LinearGradient
                 colors={[colors.primary[700], colors.primary[600]]}
                 style={styles.bottomBar}
               />
             </View>
-          </Layout>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </Layout>
+      <LanguageSelector
+        modalRef={sourceModalRef}
+        language={sourceLanguage}
+        onChange={(lang: Language) => setSourceLanguage(lang)}
+      />
+      <LanguageSelector
+        modalRef={targetModalRef}
+        language={targetLanguage}
+        onChange={(lang: Language) => setTargetLanguage(lang)}
+      />
       <TermsOfUse isOpen={isTermsOpen} onClose={() => toggleTerms(false)} />
       <PrivacyPolicy
         isOpen={isPrivacyOpen}
         onClose={() => togglePrivacy(false)}
       />
+
+      <Learn isPlaying={isLearnPlaying} onStop={() => toggleLearn(false)} />
     </>
   );
 };

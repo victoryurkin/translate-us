@@ -11,6 +11,13 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { Netinfo } from '@translate-us/components';
 import { Support } from '@translate-us/features';
 import { RootStackParamList } from '@translate-us/constants';
+import {
+  getDefaultLanguage,
+  changeLanguage,
+  useTranslation,
+} from '@translate-us/i18n';
+import { PrivacyPolicyScreen } from '@translate-us/pages/privacy-policy';
+import { TermsOfUseScreen } from '@translate-us/pages/terms-of-use';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +43,7 @@ const UserMiddleware = () => {
 };
 
 export const Router = () => {
+  const { t } = useTranslation();
   const { isLoading, authUser } = useAuth();
   const { setLoading } = useApp();
 
@@ -61,6 +69,11 @@ export const Router = () => {
     setLoading(isLoading);
   }, [isLoading]);
 
+  React.useEffect(() => {
+    const l = getDefaultLanguage();
+    changeLanguage(l);
+  }, []);
+
   return (
     <React.Fragment>
       {!isLoading && (
@@ -75,6 +88,24 @@ export const Router = () => {
               name="Support"
               component={Support}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="PrivacyPolicy"
+              component={PrivacyPolicyScreen}
+              options={{
+                headerShown: true,
+                headerTitle: t('privacy.title'),
+                headerBackTitleVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="TermsOfUse"
+              component={TermsOfUseScreen}
+              options={{
+                headerShown: true,
+                headerTitle: t('terms.title'),
+                headerBackTitleVisible: false,
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>
