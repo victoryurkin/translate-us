@@ -352,7 +352,7 @@ export const Learn: React.FC = () => {
         AsyncStorage.setItem('learn.is_first_time', 'true');
         setTimeout(() => {
           notifications.emit(AppEvents.LEARN_PLAY);
-        }, 2000);
+        }, 3000);
       }
     };
     checkIfFirstTime();
